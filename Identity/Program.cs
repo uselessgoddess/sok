@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using Identity.Commands;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -54,6 +55,7 @@ builder.Services.AddAuthentication(options =>
     });
 
 builder.Services.AddControllers();
+builder.Services.AddCommandsValidation();
 
 builder.Services.AddSwaggerGen(c =>
 {
@@ -85,6 +87,7 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 builder.Services.AddScoped<TokenService>();
+builder.Services.AddMediatR(c => c.RegisterServicesFromAssemblies(typeof(Program).Assembly));
 
 var app = builder.Build();
 
@@ -97,10 +100,9 @@ using (var scope = app.Services.CreateScope())
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
-
-app.UseSwagger();
-app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "IdentityService API v1"));
 
 app.UseHttpsRedirection();
 
