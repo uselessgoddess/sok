@@ -1,6 +1,9 @@
-﻿using MediatR;
+﻿using FluentValidation;
+using MediatR;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Identity.Controllers;
 
@@ -17,32 +20,52 @@ public class WalidateAttribute : ActionFilterAttribute
 
 public static class HelperExtension
 {
-    public static Router<T> Route<T>(this IRequest<T> req, IMediator mediator)
+    public static async Task<IActionResult> RouteEmpty(this IRequest req, IMediator mediator)
     {
-        return new Router<T>(mediator.Send(req)!);
-    }
-}
-
-public class Router<T>(Task<T?> task)
-{
-    private Func<T, IActionResult> _then = x => new OkObjectResult(x);
-    private Func<IActionResult> _else = () => new BadRequestResult();
-
-    public Router<T> Then(Func<T, IActionResult> then)
-    {
-        _then = then;
-        return this;
+        await RouteImpl(async () =>
+        {
+            await mediator.Send(req);
+            return 0;
+        });
+        return new OkResult();
     }
 
-    public Router<T> Else(Func<IActionResult> @else)
+    public static async Task<IActionResult> Route<T>(this IRequest<T> req, IMediator mediator)
     {
-        _else = @else;
-        return this;
+        return await RouteImpl(async () => await mediator.Send(req));
     }
 
-    public async Task<IActionResult> Result()
+    static async Task<IActionResult> RouteImpl<T>(Func<Task<T>> impl)
     {
-        var result = await task;
-        return result != null ? _then.Invoke(result) : _else.Invoke();
+        T? result;
+        try
+        {
+            result = await impl();
+        }
+        catch (ValidationException ex)
+        {
+            var problem = new ValidationProblemDetails
+            {
+                Title = "One or more validation errors occurred.",
+                Status = StatusCodes.Status400BadRequest,
+            };
+            foreach (var error in ex.Errors)
+            {
+                problem.Errors.Add(error.PropertyName, [error.ErrorMessage]);
+            }
+
+            return new BadRequestObjectResult(problem);
+        }
+        catch (Exception ex)
+        {
+            return ex switch
+            {
+                NotFoundException => new BadRequestObjectResult(ex.Message),
+                UnauthorizedException => new UnauthorizedObjectResult(ex.Message),
+                _ => throw ex,
+            };
+        }
+
+        return new OkObjectResult(result);
     }
 }

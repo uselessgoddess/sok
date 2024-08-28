@@ -8,14 +8,15 @@ namespace Identity.Services;
 
 public class TokenService(IConfiguration config)
 {
-    public string Access(AppUser user)
+    public string Access(AppUser user, IEnumerable<Role> roles)
     {
-        var claims = new[]
+        var claims = new List<Claim>
         {
-            new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            new Claim(ClaimTypes.NameIdentifier, user.Id)
+            new(JwtRegisteredClaimNames.Sub, user.UserName),
+            new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            new(ClaimTypes.NameIdentifier, user.Id)
         };
+        claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role.ToString())));
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["Jwt:Key"]));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

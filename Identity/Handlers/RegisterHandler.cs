@@ -1,4 +1,6 @@
-﻿using Identity.Commands;
+﻿using FluentValidation;
+using FluentValidation.Results;
+using Identity.Commands;
 using Identity.Models;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -6,12 +8,21 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Identity.Handlers;
 
-public class RegisterHandler(UserManager<AppUser> cx) : IRequestHandler<Register, EmptyResult?>
+public class RegisterHandler(UserManager<AppUser> users) : IRequestHandler<Register>
 {
-    public async Task<EmptyResult?> Handle(Register req, CancellationToken cancellationToken)
+    public async Task Handle(Register req, CancellationToken cancellationToken)
     {
+        if (await users.FindByEmailAsync(req.Email) == null)
+        {
+            throw new ValidationException(new[]
+                { new ValidationFailure("Email", "user with the same email already exists") });
+        }
+
         var user = new AppUser
             { UserName = req.Username, Email = req.Email, CreatedDate = DateTime.UtcNow };
-        return (await cx.CreateAsync(user, req.Password)).Succeeded ? new EmptyResult() : null;
+        if (!(await users.CreateAsync(user, req.Password)).Succeeded)
+        {
+            throw new BadRequestException("user already exists");
+        }
     }
 }

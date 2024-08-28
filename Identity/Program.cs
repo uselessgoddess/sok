@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using Identity;
 using Identity.Commands;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -93,8 +94,8 @@ var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
 {
-    var dbContext = scope.ServiceProvider.GetRequiredService<DatabaseCx>();
-    dbContext.Database.Migrate();
+    scope.ServiceProvider.GetRequiredService<DatabaseCx>().Database.Migrate();
+    await scope.ServiceProvider.AddAdminTools();
 }
 
 if (app.Environment.IsDevelopment())

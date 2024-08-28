@@ -18,14 +18,18 @@ public class LoginHandler(
         var result = await sign.PasswordSignInAsync(req.Username, req.Password, isPersistent: false,
             lockoutOnFailure: false);
 
-        if (!result.Succeeded) return null;
+        if (!result.Succeeded)
+        {
+            throw new UnauthorizedException("invalid username or password");
+        }
 
         var user = await users.FindByNameAsync(req.Username);
+        var roles = await users.GetEnumRolesAsync(user);
         var refresh = token.Refresh(user.Id);
-        
+
         cx.RefreshTokens.Add(refresh);
         await cx.SaveChangesAsync(cancellationToken);
 
-        return new TokensPair { Access = token.Access(user), Refresh = refresh.Token };
+        return new TokensPair { Access = token.Access(user, roles), Refresh = refresh.Token };
     }
 }

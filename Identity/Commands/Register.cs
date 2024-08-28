@@ -1,10 +1,12 @@
 ﻿using FluentValidation;
+using Identity.Models;
 using MediatR;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Identity.Commands;
 
-public class Register : IRequest<EmptyResult?>
+public class Register : IRequest
 {
     public string Username { get; set; }
     public string Password { get; set; }

@@ -21,11 +21,10 @@ public class RefreshHandler(
                 cancellationToken: cancellationToken);
 
         if (old == null || old.Expire < DateTime.Now || old.IsRevoked)
-            return null;
+            throw new UnauthorizedException();
 
         var user = await users.FindByIdAsync(old.UserId);
-        if (user == null)
-            return null;
+        var roles = await users.GetEnumRolesAsync(user);
 
         var refresh = token.Refresh(user.Id);
         old.IsRevoked = true;
@@ -35,13 +34,8 @@ public class RefreshHandler(
 
         return new TokensPair
         {
-            Access = token.Access(user),
+            Access = token.Access(user, roles),
             Refresh = refresh.Token
         };
-    }
-
-    public Task<TokensPair?> Handle(Login request, CancellationToken cancellationToken)
-    {
-        throw new NotImplementedException();
     }
 }

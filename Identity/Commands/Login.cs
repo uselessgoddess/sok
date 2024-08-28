@@ -15,11 +15,9 @@ public class LoginValidation : AbstractValidator<Login>
     public LoginValidation()
     {
         RuleFor(x => x.Username)
-            .NotEmpty()
-            .Length(3, 50);
+            .NotEmpty();
 
         RuleFor(x => x.Password)
-            .NotEmpty()
-            .MinimumLength(6);
+            .NotEmpty();
     }
 }
