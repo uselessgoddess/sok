@@ -11,15 +11,15 @@ public class UsersController(IMediator mediator)
     : ControllerBase
 {
     [HttpPost("promote")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Policy.Admin)]
     [Walidate]
     public async Task<IActionResult> Promote([FromBody] Promote req)
     {
         return await req.RouteEmpty(mediator);
     }
-    
+
     [HttpPost("demote")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Policy.Admin)]
     [Walidate]
     public async Task<IActionResult> Demote([FromBody] Demote req)
     {

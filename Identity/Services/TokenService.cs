@@ -12,9 +12,8 @@ public class TokenService(IConfiguration config)
     {
         var claims = new List<Claim>
         {
-            new(JwtRegisteredClaimNames.Sub, user.UserName),
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            new(ClaimTypes.NameIdentifier, user.Id)
+            new(ClaimTypes.Name, user.UserName)
         };
         claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role.ToString())));
 
@@ -26,6 +25,7 @@ public class TokenService(IConfiguration config)
             config["Jwt:Issuer"],
             config["Jwt:Audience"],
             claims,
+            null,
             expires,
             signingCredentials: creds
         );

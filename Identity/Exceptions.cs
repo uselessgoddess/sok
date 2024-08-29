@@ -2,7 +2,7 @@
 
 public class BadRequestException : Exception
 {
-    public BadRequestException()
+    public BadRequestException() : base("")
     {
     }
 
@@ -17,7 +17,7 @@ public class BadRequestException : Exception
 
 public class UnauthorizedException : Exception
 {
-    public UnauthorizedException()
+    public UnauthorizedException() : base("")
     {
     }
 
@@ -30,10 +30,9 @@ public class UnauthorizedException : Exception
     }
 }
 
-
 public class NotFoundException : Exception
 {
-    public NotFoundException()
+    public NotFoundException() : base("")
     {
     }
 

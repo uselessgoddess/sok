@@ -10,7 +10,6 @@ namespace Identity.Handlers;
 
 public class RefreshHandler(
     UserManager<AppUser> users,
-    SignInManager<AppUser> sign,
     TokenService token,
     DatabaseCx cx) : IRequestHandler<Refresh, TokensPair?>
 {

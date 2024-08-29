@@ -1,5 +1,6 @@
 ﻿using Identity.Commands;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Identity.Controllers;
@@ -27,5 +28,13 @@ public class AccountController(IMediator mediator)
     public async Task<IActionResult> Refresh([FromBody] Refresh req)
     {
         return await req.Route(mediator);
+    }
+
+    // [HttpPost("revoke"), Authorize]
+    [HttpPost, Authorize]
+    [Route("revoke")]
+    public async Task<IActionResult> Refresh()
+    {
+        return await new Revoke { Username = HttpContext.User.Identity.Name }.RouteEmpty(mediator);
     }
 }

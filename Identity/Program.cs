@@ -32,7 +32,6 @@ builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
     .AddDefaultTokenProviders();
 
 var jwt = config.GetSection("Jwt");
-var secret = jwt.GetValue<string>("Key");
 
 builder.Services.AddAuthentication(options =>
     {
@@ -51,12 +50,15 @@ builder.Services.AddAuthentication(options =>
             ValidateIssuerSigningKey = true,
             ValidIssuer = jwt.GetValue<string>("Issuer"),
             ValidAudience = jwt.GetValue<string>("Audience"),
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret))
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwt.GetValue<string>("Key")))
         };
     });
 
 builder.Services.AddControllers();
 builder.Services.AddCommandsValidation();
+
+builder.Services.AddAuthorizationBuilder()
+    .AddPolicy(Policy.Admin, policy => policy.RequireRole("Admin"));
 
 builder.Services.AddSwaggerGen(c =>
 {

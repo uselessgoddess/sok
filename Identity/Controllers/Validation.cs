@@ -22,12 +22,11 @@ public static class HelperExtension
 {
     public static async Task<IActionResult> RouteEmpty(this IRequest req, IMediator mediator)
     {
-        await RouteImpl(async () =>
+        return await RouteImpl(async () =>
         {
             await mediator.Send(req);
-            return 0;
+            return new EmptyResult();
         });
-        return new OkResult();
     }
 
     public static async Task<IActionResult> Route<T>(this IRequest<T> req, IMediator mediator)
@@ -60,9 +59,10 @@ public static class HelperExtension
         {
             return ex switch
             {
-                NotFoundException => new BadRequestObjectResult(ex.Message),
+                BadRequestException => new BadRequestObjectResult(ex.Message),
                 UnauthorizedException => new UnauthorizedObjectResult(ex.Message),
-                _ => throw ex,
+                NotFoundException => new NotFoundObjectResult(ex.Message),
+                _ => throw ex
             };
         }
 
