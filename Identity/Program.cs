@@ -1,14 +1,14 @@
-using Identity.Data;
-using Identity.Models;
-using Identity.Services;
+using System.Text;
+using Identity;
+using Identity.Core.Commands;
+using Identity.Core.Models;
+using Identity.Infrastructure.Data;
+using Identity.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using System.Text;
-using Identity;
-using Identity.Commands;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -50,7 +50,7 @@ builder.Services.AddAuthentication(options =>
             ValidateIssuerSigningKey = true,
             ValidIssuer = jwt.GetValue<string>("Issuer"),
             ValidAudience = jwt.GetValue<string>("Audience"),
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwt.GetValue<string>("Key")))
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwt.GetValue<string>("Key"))),
         };
     });
 
@@ -71,7 +71,7 @@ builder.Services.AddSwaggerGen(c =>
         Scheme = "Bearer",
         BearerFormat = "JWT",
         In = ParameterLocation.Header,
-        Description = "Put JWT Token in Bearer format {token}"
+        Description = "Put JWT Token in Bearer format {token}",
     });
     c.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
@@ -82,10 +82,10 @@ builder.Services.AddSwaggerGen(c =>
                 {
                     Type = ReferenceType.SecurityScheme,
                     Id = "Bearer"
-                }
+                },
             },
             []
-        }
+        },
     });
 });
 
