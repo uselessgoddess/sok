@@ -1,8 +1,5 @@
 ﻿using FluentValidation;
-using Identity.Models;
 using MediatR;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Identity.Commands;
 

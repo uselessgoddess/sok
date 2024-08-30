@@ -6,7 +6,7 @@ namespace Identity.Commands;
 
 public class Promote : IRequest
 {
-    public string Id { get; set; }
+    public string Username { get; set; }
     public IEnumerable<string> Roles { get; set; }
 }
 

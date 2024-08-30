@@ -29,8 +29,7 @@ public class AccountController(IMediator mediator)
     {
         return await req.Route(mediator);
     }
-
-    // [HttpPost("revoke"), Authorize]
+    
     [HttpPost, Authorize]
     [Route("revoke")]
     public async Task<IActionResult> Refresh()

@@ -1,5 +1,4 @@
-﻿using FluentValidation;
-using Identity.Models;
+﻿using Identity.Models;
 using MediatR;
 
 namespace Identity.Commands;

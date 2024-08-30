@@ -10,7 +10,7 @@ namespace Identity.Controllers;
 public class UsersController(IMediator mediator)
     : ControllerBase
 {
-    [HttpPost("promote")]
+    [HttpPut("promote")]
     [Authorize(Policy.Admin)]
     [Walidate]
     public async Task<IActionResult> Promote([FromBody] Promote req)
@@ -18,11 +18,25 @@ public class UsersController(IMediator mediator)
         return await req.RouteEmpty(mediator);
     }
 
-    [HttpPost("demote")]
+    [HttpDelete("demote")]
     [Authorize(Policy.Admin)]
     [Walidate]
     public async Task<IActionResult> Demote([FromBody] Demote req)
     {
         return await req.RouteEmpty(mediator);
+    }
+    
+    [HttpGet("user")]
+    [Walidate]
+    public async Task<IActionResult> Demote([FromBody] User req)
+    {
+        return await req.Route(mediator);
+    }
+    
+    [HttpGet("users")]
+    [Walidate]
+    public async Task<IActionResult> Demote([FromBody] Users req)
+    {
+        return await req.Route(mediator);
     }
 }

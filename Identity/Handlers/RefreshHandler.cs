@@ -20,7 +20,9 @@ public class RefreshHandler(
                 cancellationToken: cancellationToken);
 
         if (old == null || old.Expire < DateTime.Now || old.IsRevoked)
+        {
             throw new UnauthorizedException();
+        }
 
         var user = await users.FindByIdAsync(old.UserId);
         var roles = await users.GetEnumRolesAsync(user);

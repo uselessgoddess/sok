@@ -10,7 +10,7 @@ public class PromoteHandler(
 {
     public async Task Handle(Promote req, CancellationToken cancellationToken)
     {
-        var user = await users.FindByIdAsync(req.Id) ?? throw new NotFoundException();
+        var user = await users.FindByNameAsync(req.Username) ?? throw new NotFoundException();
         await users.AddToRolesAsync(user, req.Roles);
     }
 }

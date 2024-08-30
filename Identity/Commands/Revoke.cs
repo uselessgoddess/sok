@@ -1,5 +1,4 @@
-﻿using Identity.Models;
-using MediatR;
+﻿using MediatR;
 
 namespace Identity.Commands;
 
