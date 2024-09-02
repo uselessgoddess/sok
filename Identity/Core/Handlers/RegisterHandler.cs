@@ -13,8 +13,7 @@ public class RegisterHandler(UserManager<AppUser> users) : IRequestHandler<Regis
     {
         if (await users.FindByEmailAsync(req.Email) == null)
         {
-            throw new ValidationException(new[]
-                { new ValidationFailure("Email", "user with the same email already exists") });
+            throw new BadRequestException("user with the same email already exists");
         }
 
         var user = new AppUser

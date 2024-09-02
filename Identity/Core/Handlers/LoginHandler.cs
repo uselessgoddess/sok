@@ -21,7 +21,7 @@ public class LoginHandler(
 
         if (!result.Succeeded)
         {
-            throw new UnauthorizedException("invalid username or password");
+            throw new BadRequestException("invalid username or password");
         }
 
         var user = await users.FindByNameAsync(req.Username);

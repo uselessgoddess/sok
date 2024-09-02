@@ -22,7 +22,7 @@ public class RefreshHandler(
 
         if (old == null || old.Expire < DateTime.Now || old.IsRevoked)
         {
-            throw new UnauthorizedException();
+            throw new BadRequestException();
         }
 
         var user = await users.FindByIdAsync(old.UserId);
