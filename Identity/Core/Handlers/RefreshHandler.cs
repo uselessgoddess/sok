@@ -1,10 +1,10 @@
 ﻿using Identity.Infrastructure.Data;
+using Identity.Infrastructure.Models;
 using Identity.Infrastructure.Services;
 
 namespace Identity.Core.Handlers;
 
 using Identity.Core.Commands;
-using Identity.Core.Models;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -37,7 +37,7 @@ public class RefreshHandler(
         return new TokensPair
         {
             Access = token.Access(user, roles),
-            Refresh = refresh.Token
+            Refresh = refresh.Token,
         };
     }
 }

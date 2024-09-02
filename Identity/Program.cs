@@ -1,9 +1,11 @@
 using System.Text;
 using Identity;
 using Identity.Api.Middlewares;
+using Identity.Core;
 using Identity.Core.Commands;
-using Identity.Core.Models;
+using Identity.Infrastructure;
 using Identity.Infrastructure.Data;
+using Identity.Infrastructure.Models;
 using Identity.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -13,50 +15,10 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var config = builder.Configuration;
-
-builder.Services.AddDbContext<DatabaseCx>(options =>
-    options.UseSqlite(config.GetConnectionString("DefaultConnection")));
-
-builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
-    {
-        options.Password = new PasswordOptions
-        {
-            RequireDigit = false,
-            RequireLowercase = true,
-            RequireUppercase = false,
-            RequireNonAlphanumeric = true,
-            RequiredLength = 8,
-        };
-    })
-    .AddEntityFrameworkStores<DatabaseCx>()
-    .AddDefaultTokenProviders();
-
-var jwt = config.GetSection("Jwt");
-
-builder.Services.AddAuthentication(options =>
-    {
-        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    })
-    .AddJwtBearer(options =>
-    {
-        options.RequireHttpsMetadata = false;
-        options.SaveToken = true;
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-            ValidIssuer = jwt.GetValue<string>("Issuer"),
-            ValidAudience = jwt.GetValue<string>("Audience"),
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwt.GetValue<string>("Key"))),
-        };
-    });
+builder.AddInfrastructure();
 
 builder.Services.AddControllers();
-builder.Services.AddCommandsValidation();
+builder.Services.AddDataValidation();
 
 builder.Services.AddAuthorizationBuilder()
     .AddPolicy(Policy.Admin, policy => policy.RequireRole("Admin"));
@@ -82,7 +44,7 @@ builder.Services.AddSwaggerGen(c =>
                 Reference = new OpenApiReference
                 {
                     Type = ReferenceType.SecurityScheme,
-                    Id = "Bearer"
+                    Id = "Bearer",
                 },
             },
             []
@@ -90,15 +52,11 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-builder.Services.AddScoped<TokenService>();
-builder.Services.AddMediatR(c => c.RegisterServicesFromAssemblies(typeof(Program).Assembly));
-
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
 {
     scope.ServiceProvider.GetRequiredService<DatabaseCx>().Database.Migrate();
-    await scope.ServiceProvider.AddAdminTools();
 }
 
 if (app.Environment.IsDevelopment())

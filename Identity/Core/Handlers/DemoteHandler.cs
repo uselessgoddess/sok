@@ -1,7 +1,8 @@
-﻿namespace Identity.Core.Handlers;
+﻿using Identity.Infrastructure.Models;
+
+namespace Identity.Core.Handlers;
 
 using Identity.Core.Commands;
-using Identity.Core.Models;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 

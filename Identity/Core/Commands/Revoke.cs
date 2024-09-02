@@ -1,6 +1,6 @@
-﻿using MediatR;
+﻿namespace Identity.Core.Commands;
 
-namespace Identity.Core.Commands;
+using MediatR;
 
 public class Revoke : IRequest
 {

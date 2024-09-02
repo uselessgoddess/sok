@@ -1,4 +1,4 @@
-﻿namespace Identity.Core.Models;
+﻿namespace Identity.Infrastructure.Models;
 
 using Microsoft.AspNetCore.Identity;
 

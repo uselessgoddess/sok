@@ -1,9 +1,10 @@
-﻿namespace Identity.Infrastructure.Services;
+﻿using Identity.Infrastructure.Models;
+
+namespace Identity.Infrastructure.Services;
 
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Identity.Core.Models;
 using Microsoft.IdentityModel.Tokens;
 
 public class TokenService(IConfiguration config)

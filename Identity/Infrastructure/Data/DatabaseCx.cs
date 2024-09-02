@@ -1,6 +1,7 @@
-﻿namespace Identity.Infrastructure.Data;
+﻿using Identity.Infrastructure.Models;
 
-using Identity.Core.Models;
+namespace Identity.Infrastructure.Data;
+
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,6 +11,8 @@ public class DatabaseCx(DbContextOptions<DatabaseCx> options) : IdentityDbContex
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
+        builder.AddAdminSeeds();
+
         base.OnModelCreating(builder);
     }
 }

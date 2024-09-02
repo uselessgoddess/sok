@@ -1,10 +1,10 @@
-﻿using Identity.Infrastructure.Data;
-using Identity.Infrastructure.Services;
+﻿using Identity.Infrastructure.Models;
 
 namespace Identity.Core.Handlers;
 
 using Identity.Core.Commands;
-using Identity.Core.Models;
+using Identity.Infrastructure.Data;
+using Identity.Infrastructure.Services;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 
@@ -16,8 +16,8 @@ public class LoginHandler(
 {
     public async Task<TokensPair?> Handle(Login req, CancellationToken cancellationToken)
     {
-        var result = await sign.PasswordSignInAsync(req.Username, req.Password, isPersistent: false,
-            lockoutOnFailure: false);
+        var result =
+            await sign.PasswordSignInAsync(req.Username, req.Password, isPersistent: false, lockoutOnFailure: false);
 
         if (!result.Succeeded)
         {

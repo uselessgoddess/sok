@@ -1,23 +1,12 @@
-﻿namespace Identity.Core.Commands;
+﻿using Identity.Infrastructure.Models;
 
-using FluentValidation;
-using Identity.Core.Models;
+namespace Identity.Core.Commands;
+
 using MediatR;
 
 public class Login : IRequest<TokensPair?>
 {
     public string Username { get; set; }
+
     public string Password { get; set; }
-}
-
-public class LoginValidation : AbstractValidator<Login>
-{
-    public LoginValidation()
-    {
-        RuleFor(x => x.Username)
-            .NotEmpty();
-
-        RuleFor(x => x.Password)
-            .NotEmpty();
-    }
 }

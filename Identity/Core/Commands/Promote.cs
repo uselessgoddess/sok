@@ -1,8 +1,9 @@
-﻿using FluentValidation;
-using Identity.Core.Models;
-using MediatR;
+﻿using Identity.Infrastructure.Models;
 
 namespace Identity.Core.Commands;
+
+using FluentValidation;
+using MediatR;
 
 public class Promote : IRequest
 {

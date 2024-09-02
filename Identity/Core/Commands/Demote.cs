@@ -1,6 +1,7 @@
-﻿namespace Identity.Core.Commands;
+﻿using Identity.Infrastructure.Models;
 
-using Identity.Core.Models;
+namespace Identity.Core.Commands;
+
 using MediatR;
 
 public class Demote : IRequest
