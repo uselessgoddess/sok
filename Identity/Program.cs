@@ -1,5 +1,6 @@
 using System.Text;
 using Identity;
+using Identity.Api.Middlewares;
 using Identity.Core.Commands;
 using Identity.Core.Models;
 using Identity.Infrastructure.Data;
@@ -22,10 +23,10 @@ builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
         options.Password = new PasswordOptions
         {
             RequireDigit = false,
-            RequireLowercase = false,
+            RequireLowercase = true,
             RequireUppercase = false,
-            RequireNonAlphanumeric = false,
-            RequiredLength = 0,
+            RequireNonAlphanumeric = true,
+            RequiredLength = 8,
         };
     })
     .AddEntityFrameworkStores<DatabaseCx>()
@@ -106,6 +107,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseMiddlewares();
 
 app.UseHttpsRedirection();
 
