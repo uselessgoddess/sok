@@ -26,18 +26,19 @@ public class UsersController(IMediator mediator)
     {
         return await req.RouteEmpty(mediator);
     }
-    
-    [HttpGet("user")]
+
+    [HttpGet("{id}")]
     [Walidate]
-    public async Task<IActionResult> Demote([FromBody] User req)
+    public async Task<IActionResult> User(string id)
     {
-        return await req.Route(mediator);
+        return await new User { Username = id }.Route(mediator);
     }
-    
+
+    // TODO: later use automapper
     [HttpGet("users")]
     [Walidate]
-    public async Task<IActionResult> Demote([FromBody] Users req)
+    public async Task<IActionResult> Users(uint page, uint size)
     {
-        return await req.Route(mediator);
+        return await new Users { Page = page, Size = size }.Route(mediator);
     }
 }

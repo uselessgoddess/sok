@@ -21,8 +21,8 @@ public class UsersHandler(
     public async Task<List<AppUser>> Handle(Users req, CancellationToken cancellationToken)
     {
         return await users.Users
-            .Skip((int)(req.Page * req.Count))
-            .Take((int)req.Count)
+            .Skip((int)(req.Page * req.Size))
+            .Take((int)req.Size)
             .ToListAsync(cancellationToken);
     }
 }

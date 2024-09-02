@@ -1,11 +1,8 @@
-﻿using FluentValidation;
+﻿namespace Identity.Api.Controllers;
+
 using MediatR;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-
-namespace Identity.Api.Controllers;
 
 public class WalidateAttribute : ActionFilterAttribute
 {
@@ -36,36 +33,6 @@ public static class HelperExtension
 
     static async Task<IActionResult> RouteImpl<T>(Func<Task<T>> impl)
     {
-        T? result;
-        try
-        {
-            result = await impl();
-        }
-        catch (ValidationException ex)
-        {
-            var problem = new ValidationProblemDetails
-            {
-                Title = "One or more validation errors occurred.",
-                Status = StatusCodes.Status400BadRequest,
-            };
-            foreach (var error in ex.Errors)
-            {
-                problem.Errors.Add(error.PropertyName, [error.ErrorMessage]);
-            }
-
-            return new BadRequestObjectResult(problem);
-        }
-        catch (Exception ex)
-        {
-            return ex switch
-            {
-                BadRequestException => new BadRequestObjectResult(ex.Message),
-                UnauthorizedException => new UnauthorizedObjectResult(ex.Message),
-                NotFoundException => new NotFoundObjectResult(ex.Message),
-                _ => throw ex
-            };
-        }
-
-        return new OkObjectResult(result);
+        return new OkObjectResult(await impl());
     }
 }
