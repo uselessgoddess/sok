@@ -1,4 +1,4 @@
-﻿namespace Identity;
+﻿namespace Identity.Core;
 
 public class BadRequestException : Exception
 {

@@ -1,4 +1,6 @@
-﻿namespace Identity.Handlers;
+﻿using Identity.Core;
+
+namespace Identity.Handlers;
 
 using Identity.Core.Models;
 using Identity.Core.Queries;
