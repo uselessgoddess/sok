@@ -1,4 +1,4 @@
-﻿namespace Identity.Api.Controllers;
+﻿namespace Identity.Api.App.Controllers;
 
 using MediatR;
 using Microsoft.AspNetCore.Mvc;

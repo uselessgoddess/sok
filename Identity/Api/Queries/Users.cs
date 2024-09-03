@@ -1,11 +1,11 @@
-﻿namespace Identity.Core.Queries;
+﻿namespace Identity.Api.Queries;
 
-using Identity.Infrastructure.Models;
+using Identity.Core.Models;
 using MediatR;
 
 public class Users : IRequest<List<AppUser>>
 {
     public uint Page { get; set; }
-    
+
     public uint Size { get; set; }
 }

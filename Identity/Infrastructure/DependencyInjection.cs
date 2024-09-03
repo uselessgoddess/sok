@@ -1,17 +1,18 @@
-﻿using System.Reflection;
+﻿using MediatR;
 
 namespace Identity.Infrastructure;
 
-using Identity.Infrastructure.Services;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
 using System.Text;
 using Identity.Infrastructure.Data;
-using Identity.Infrastructure.Models;
+using Identity.Core.Models;
+using Identity.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 
 public static class DependencyInjection
@@ -60,7 +61,6 @@ public static class DependencyInjection
             });
 
         builder.Services.AddScoped<TokenService>();
-        builder.Services.AddMediatR(config => config.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly()));
 
         return builder;
     }

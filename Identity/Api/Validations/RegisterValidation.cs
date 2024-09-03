@@ -1,4 +1,4 @@
-﻿namespace Identity.Core.Commands;
+﻿namespace Identity.Api.Commands;
 
 using FluentValidation;
 

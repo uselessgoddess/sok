@@ -1,6 +1,7 @@
-﻿namespace Identity.Core.Commands;
+﻿namespace Identity.Api.Validations;
 
 using FluentValidation;
+using Identity.Api.Commands;
 
 public class LoginValidation : AbstractValidator<Login>
 {

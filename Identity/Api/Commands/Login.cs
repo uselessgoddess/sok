@@ -1,7 +1,6 @@
-﻿using Identity.Infrastructure.Models;
+﻿namespace Identity.Api.Commands;
 
-namespace Identity.Core.Commands;
-
+using Identity.Core.Models;
 using MediatR;
 
 public class Login : IRequest<TokensPair?>

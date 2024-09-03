@@ -1,11 +1,9 @@
-﻿using Identity.Infrastructure.Models;
-
-namespace Identity.Core.Commands;
+﻿namespace Identity.Api.Commands;
 
 using MediatR;
 
 public class Demote : IRequest
 {
     public string Id { get; set; }
-    public IEnumerable<Role> Roles { get; set; }
+    public IEnumerable<string> Roles { get; set; }
 }

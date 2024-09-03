@@ -1,10 +1,10 @@
-﻿using Identity.Core.Commands;
-using Identity.Core.Queries;
+﻿namespace Identity.Api.App.Controllers;
+
+using Identity.Api.Commands;
+using Identity.Api.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
-namespace Identity.Api.Controllers;
 
 [ApiController]
 [Route("api/users")]

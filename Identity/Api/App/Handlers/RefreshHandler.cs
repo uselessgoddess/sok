@@ -1,10 +1,10 @@
-﻿using Identity.Infrastructure.Data;
-using Identity.Infrastructure.Models;
+﻿namespace Identity.Api.App.Handlers;
+
+using Identity.Api.Commands;
+using Identity.Core;
+using Identity.Core.Models;
+using Identity.Infrastructure.Data;
 using Identity.Infrastructure.Services;
-
-namespace Identity.Core.Handlers;
-
-using Identity.Core.Commands;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;

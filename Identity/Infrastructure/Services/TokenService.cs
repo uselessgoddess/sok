@@ -1,4 +1,4 @@
-﻿using Identity.Infrastructure.Models;
+﻿using Identity.Core.Models;
 using Microsoft.Extensions.Configuration;
 
 namespace Identity.Infrastructure.Services;

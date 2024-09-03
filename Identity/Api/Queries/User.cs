@@ -1,6 +1,6 @@
-﻿namespace Identity.Core.Queries;
+﻿namespace Identity.Api.Queries;
 
-using Identity.Infrastructure.Models;
+using Identity.Core.Models;
 using MediatR;
 
 public class User : IRequest<AppUser>

@@ -1,6 +1,6 @@
-﻿namespace Identity.Api.Controllers;
+﻿namespace Identity.Api.App.Controllers;
 
-using Identity.Core.Commands;
+using Identity.Api.Commands;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

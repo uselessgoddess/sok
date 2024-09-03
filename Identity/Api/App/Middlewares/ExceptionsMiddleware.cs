@@ -1,6 +1,6 @@
-﻿using Identity.Core;
+﻿namespace Identity.Api.App.Middlewares;
 
-namespace Identity.Api.Middlewares;
+using Identity.Core;
 
 public class ExceptionsMiddleware(RequestDelegate next)
 {

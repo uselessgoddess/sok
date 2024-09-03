@@ -1,6 +1,6 @@
 ﻿namespace Identity.Infrastructure;
 
-using Identity.Infrastructure.Models;
+using Identity.Core.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 

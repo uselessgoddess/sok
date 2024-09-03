@@ -1,8 +1,8 @@
-﻿using Identity.Infrastructure.Models;
+﻿namespace Identity.Api.App.Handlers;
 
-namespace Identity.Core.Handlers;
-
-using Identity.Core.Commands;
+using Identity.Api.Commands;
+using Identity.Core;
+using Identity.Core.Models;
 using Identity.Infrastructure.Data;
 using Identity.Infrastructure.Services;
 using MediatR;

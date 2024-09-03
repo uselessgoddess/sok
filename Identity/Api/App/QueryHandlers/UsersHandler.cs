@@ -1,7 +1,7 @@
-﻿namespace Identity.Core.QueryHandlers;
+﻿namespace Identity.Api.App.QueryHandlers;
 
-using Identity.Core.Queries;
-using Identity.Infrastructure.Models;
+using Identity.Api.Queries;
+using Identity.Core.Models;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;

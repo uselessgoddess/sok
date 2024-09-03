@@ -1,8 +1,9 @@
-﻿namespace Identity.Core;
+﻿namespace Identity.Api;
 
 using FluentValidation;
 using FluentValidation.AspNetCore;
-using Identity.Core.Commands;
+using Identity.Api.Commands;
+using Identity.Api.Validations;
 
 public static class DataValidation
 {

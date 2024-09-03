@@ -1,7 +1,6 @@
-﻿using Identity.Infrastructure.Models;
+﻿namespace Identity.Infrastructure.Data;
 
-namespace Identity.Infrastructure.Data;
-
+using Identity.Core.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
