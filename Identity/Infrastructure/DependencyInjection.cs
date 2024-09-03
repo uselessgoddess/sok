@@ -1,7 +1,11 @@
-﻿using Identity.Infrastructure.Services;
+﻿using System.Reflection;
 
 namespace Identity.Infrastructure;
 
+using Identity.Infrastructure.Services;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using System.Text;
 using Identity.Infrastructure.Data;
 using Identity.Infrastructure.Models;
@@ -56,7 +60,7 @@ public static class DependencyInjection
             });
 
         builder.Services.AddScoped<TokenService>();
-        builder.Services.AddMediatR(config => config.RegisterServicesFromAssemblies(typeof(Program).Assembly));
+        builder.Services.AddMediatR(config => config.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly()));
 
         return builder;
     }
