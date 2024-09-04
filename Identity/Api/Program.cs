@@ -50,7 +50,7 @@ var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
 {
-    scope.ServiceProvider.GetRequiredService<DatabaseCx>().Database.Migrate();
+    scope.ServiceProvider.GetRequiredService<DatabaseContext>().Database.Migrate();
 }
 
 if (app.Environment.IsDevelopment())

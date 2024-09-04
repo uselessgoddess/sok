@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Identity.Migrations
 {
-    [DbContext(typeof(DatabaseCx))]
+    [DbContext(typeof(DatabaseContext))]
     [Migration("20240826164222_Initial")]
     partial class Initial
     {

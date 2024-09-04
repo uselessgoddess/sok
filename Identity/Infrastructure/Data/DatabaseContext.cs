@@ -4,7 +4,7 @@ using Identity.Core.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-public class DatabaseCx(DbContextOptions<DatabaseCx> options) : IdentityDbContext<AppUser>(options)
+public class DatabaseContext(DbContextOptions<DatabaseContext> options) : IdentityDbContext<AppUser>(options)
 {
     public DbSet<RefreshToken> RefreshTokens { get; set; }
 

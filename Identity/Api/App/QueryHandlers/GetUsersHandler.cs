@@ -6,7 +6,7 @@ using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-public class UsersHandler(
+public class GetUsersHandler(
     UserManager<AppUser> users) : IRequestHandler<Users, List<AppUser>>
 {
     public async Task<List<AppUser>> Handle(Users req, CancellationToken cancellationToken)

@@ -10,17 +10,17 @@ using Microsoft.EntityFrameworkCore;
 
 public class RevokeHandler(
     UserManager<AppUser> users,
-    DatabaseCx cx) : IRequestHandler<Revoke>
+    DatabaseContext context) : IRequestHandler<Revoke>
 {
     public async Task Handle(Revoke req, CancellationToken cancellationToken)
     {
         var user = await users.FindByNameAsync(req.Username) ?? throw new NotFoundException();
         var refresh =
-            await cx.RefreshTokens.FirstOrDefaultAsync(rt => rt.UserId == user.Id, cancellationToken);
+            await context.RefreshTokens.FirstOrDefaultAsync(rt => rt.UserId == user.Id, cancellationToken);
 
         refresh!.IsRevoked = true;
 
-        cx.RefreshTokens.Update(refresh);
-        await cx.SaveChangesAsync(cancellationToken);
+        context.RefreshTokens.Update(refresh);
+        await context.SaveChangesAsync(cancellationToken);
     }
 }

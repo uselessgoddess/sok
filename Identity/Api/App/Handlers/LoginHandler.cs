@@ -12,7 +12,7 @@ public class LoginHandler(
     UserManager<AppUser> users,
     SignInManager<AppUser> sign,
     TokenService token,
-    DatabaseCx cx) : IRequestHandler<Login, TokensPair?>
+    DatabaseContext context) : IRequestHandler<Login, TokensPair?>
 {
     public async Task<TokensPair?> Handle(Login req, CancellationToken cancellationToken)
     {
@@ -28,8 +28,8 @@ public class LoginHandler(
         var roles = await users.GetEnumRolesAsync(user);
         var refresh = token.Refresh(user.Id);
 
-        cx.RefreshTokens.Add(refresh);
-        await cx.SaveChangesAsync(cancellationToken);
+        context.RefreshTokens.Add(refresh);
+        await context.SaveChangesAsync(cancellationToken);
 
         return new TokensPair { Access = token.Access(user, roles), Refresh = refresh.Token };
     }

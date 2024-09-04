@@ -12,12 +12,12 @@ using Microsoft.EntityFrameworkCore;
 public class RefreshHandler(
     UserManager<AppUser> users,
     TokenService token,
-    DatabaseCx cx) : IRequestHandler<Refresh, TokensPair?>
+    DatabaseContext context) : IRequestHandler<Refresh, TokensPair?>
 {
     public async Task<TokensPair?> Handle(Refresh req, CancellationToken cancellationToken)
     {
         var old =
-            await cx.RefreshTokens.FirstOrDefaultAsync(rt => rt.Token == req.Token,
+            await context.RefreshTokens.FirstOrDefaultAsync(rt => rt.Token == req.Token,
                 cancellationToken: cancellationToken);
 
         if (old == null || old.Expire < DateTime.Now || old.IsRevoked)
@@ -30,9 +30,9 @@ public class RefreshHandler(
 
         var refresh = token.Refresh(user.Id);
         old.IsRevoked = true;
-        cx.RefreshTokens.Update(old);
-        cx.RefreshTokens.Add(refresh);
-        await cx.SaveChangesAsync(cancellationToken);
+        context.RefreshTokens.Update(old);
+        context.RefreshTokens.Add(refresh);
+        await context.SaveChangesAsync(cancellationToken);
 
         return new TokensPair
         {

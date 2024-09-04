@@ -21,7 +21,7 @@ public static class DependencyInjection
     {
         var config = builder.Configuration;
 
-        builder.Services.AddDbContext<DatabaseCx>(options =>
+        builder.Services.AddDbContext<DatabaseContext>(options =>
             options.UseSqlite(config.GetConnectionString("DefaultConnection")));
 
         builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
@@ -35,7 +35,7 @@ public static class DependencyInjection
                     RequiredLength = 0,
                 };
             })
-            .AddEntityFrameworkStores<DatabaseCx>()
+            .AddEntityFrameworkStores<DatabaseContext>()
             .AddDefaultTokenProviders();
 
         var jwt = config.GetSection("Jwt");
