@@ -11,9 +11,9 @@ public class EmulationStateRepository(IMongoCollection<EmulationState> states) :
         return await states.Find(state => state.Id == emulation).FirstAsync();
     }
 
-    public async Task<IAsyncCursor<EmulationState>> LoadStatesAsync(string user)
+    public Task<IEnumerable<EmulationState>> LoadStatesAsync(string user)
     {
-        return await states.FindAsync(state => state.User == user);
+        return Task.FromResult(states.Find(state => state.User == user).ToEnumerable());
     }
 
     public async Task StoreStateAsync(EmulationState state)
