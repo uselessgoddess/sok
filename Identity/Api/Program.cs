@@ -1,6 +1,6 @@
 using Identity;
 using Identity.Api;
-using Identity.Api.Middlewares;
+using Identity.Api.App.Middlewares;
 using Identity.Infrastructure;
 using Identity.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;

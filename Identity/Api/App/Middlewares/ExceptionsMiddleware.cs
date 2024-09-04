@@ -1,6 +1,6 @@
-﻿namespace Identity.Api.App.Middlewares;
+﻿using Identity.Core.Exceptions;
 
-using Identity.Core;
+namespace Identity.Api.App.Middlewares;
 
 public class ExceptionsMiddleware(RequestDelegate next)
 {
@@ -31,6 +31,7 @@ public class ExceptionsMiddleware(RequestDelegate next)
         {
             BadRequestException => 400,
             UnauthorizedException => 401,
+            AlreadyExistsException => 403,
             NotFoundException => 404,
             _ => 500,
         };
