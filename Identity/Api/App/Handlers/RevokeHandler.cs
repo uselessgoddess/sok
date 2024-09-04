@@ -2,6 +2,7 @@
 
 using Identity.Api.Commands;
 using Identity.Core;
+using Identity.Core.Exceptions;
 using Identity.Core.Models;
 using Identity.Infrastructure.Data;
 using MediatR;
