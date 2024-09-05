@@ -2,8 +2,11 @@
 
 public class CpuState
 {
-    public byte[] Src { get; set; }
-    public uint Pc { get; set; }
-    public uint[] Xregs { get; set; }
-    public float[] Fregs { get; set; }
+    public uint Pc { get; set; } = 0;
+
+    public uint[] Xregs { get; set; } = [];
+
+    public float[] Fregs { get; set; } = [];
+
+    public BusState Bus { get; set; } = new();
 }

@@ -1,20 +1,35 @@
-﻿namespace VRisc.Presentation.Hubs;
+﻿using System.Threading.Channels;
+
+namespace VRisc.Presentation.Hubs;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 
-public class EmulationHub(EmulationHub emulator) : Hub
+[Authorize]
+public class EmulationHub() : Hub
 {
-    [Authorize]
-    public async Task StartEmulation(string sourceCode)
+    public async Task StartStreamingCpuState()
     {
-        var user = Context.User.Identity!.Name;
+        var channel = Channel.CreateUnbounded<int>();
+        {
+            _ = Task.Run(async () =>
+            {
+                while (true)
+                {
+                    await channel.Writer.WriteAsync(123);
 
-        await Clients.All.SendAsync("ReceiveMessage", $"{user} started an emulation.");
-    }
+                    await Task.Delay(1000); // Задержка в 1 секунду для обновления
+                }
+            });
+        }
 
-    public async Task StopEmulation(string id)
-    {
-        await Clients.All.SendAsync("ReceiveMessage", $"Emulation {id} stopped.");
+        var user = Context.User.Identity!.Name!;
+        while (await channel.Reader.WaitToReadAsync())
+        {
+            while (channel.Reader.TryRead(out var reg))
+            {
+                await Clients.Caller.SendAsync("ReceiveRegistersUpdate", reg);
+            }
+        }
     }
 }

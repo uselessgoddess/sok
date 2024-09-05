@@ -1,14 +1,14 @@
-﻿using VRisc.Core.Entities;
+﻿namespace VRisc.Core.Interfaces;
 
-namespace VRisc.Core.Interfaces;
+using VRisc.Core.Entities;
 
 public interface IEmulationStateRepository
 {
-    Task<EmulationState> LoadStateAsync(string emulation);
+    Task<EmulationState> LoadState(string emulation);
 
-    Task<IEnumerable<EmulationState>> LoadStatesAsync(string user);
+    Task<IEnumerable<EmulationState>> LoadStates(string user);
 
-    Task StoreStateAsync(EmulationState state);
+    Task StoreState(EmulationState state);
 
-    Task ForgetStateAsync(string emulation);
+    Task ForgetState(string emulation);
 }

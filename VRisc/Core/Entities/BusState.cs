@@ -2,5 +2,5 @@
 
 public class BusState
 {
-    public byte[]? Dram { get; set; }
+    public byte[] Dram { get; set; } = [];
 }

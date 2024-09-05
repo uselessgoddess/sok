@@ -8,4 +8,13 @@ public class EmulationState
     public DateTime Modified { get; set; }
 
     public CpuState Cpu { get; set; }
+
+    public EmulationState(string user)
+    {
+        Id = Guid.NewGuid().ToString();
+        User = user;
+        Creation = DateTime.Now;
+        Modified = DateTime.Now;
+        Cpu = new CpuState();
+    }
 }

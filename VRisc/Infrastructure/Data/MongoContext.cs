@@ -1,11 +1,11 @@
-﻿using MongoDB.Driver;
-using VRisc.Core.Entities;
+﻿namespace VRisc.Infrastructure.Data;
 
-namespace VRisc.Infrastructure.Data;
+using MongoDB.Driver;
+using VRisc.Core.Entities;
 
 public class MongoContext(MongoClient client, string database)
 {
-    private readonly IMongoDatabase _database = client.GetDatabase(database);
+    private readonly IMongoDatabase database = client.GetDatabase(database);
 
-    public IMongoCollection<EmulationState> StatesCollection => _database.GetCollection<EmulationState>("States");
+    public IMongoCollection<EmulationState> StatesCollection => database.GetCollection<EmulationState>("States");
 }

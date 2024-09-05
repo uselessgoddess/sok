@@ -1,4 +1,5 @@
 using Microsoft.OpenApi.Models;
+using VRisc.Api.Middlewares;
 using VRisc.Infrastructure;
 using VRisc.Presentation;
 using VRisc.Presentation.Hubs;
@@ -48,6 +49,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseMiddlewares();
+
 app.UseHttpsRedirection();
 
 app.UseRouting();
@@ -56,6 +59,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-app.MapHub<EmulationHub>("/emu-hab");
+app.MapHub<EmulationHub>("/emu-hub");
 
 app.Run();

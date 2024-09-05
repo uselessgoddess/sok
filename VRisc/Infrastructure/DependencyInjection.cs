@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿namespace VRisc.Infrastructure;
+
+using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
@@ -11,27 +13,13 @@ using VRisc.Core.UseCases;
 using VRisc.Infrastructure.Data;
 using VRisc.Infrastructure.Repositories;
 
-namespace VRisc.Infrastructure;
-
 public static class DependencyInjection
 {
     public static WebApplicationBuilder AddInfrastructure(this WebApplicationBuilder builder)
     {
         var config = builder.Configuration;
 
-        var conn = builder.Configuration.GetConnectionString("DefaultConnection")!;
-        var database = builder.Configuration.GetSection("Mongo")["Database"]!;
-        var mongo = new MongoContext(new MongoClient(conn), database);
-        
-        builder.Services.AddSingleton(mongo);
-        builder.Services.AddScoped<IMongoCollection<EmulationState>>(_ => mongo.StatesCollection);
-
-        {
-            builder.Services.AddSingleton<EmulationState>();
-        }
-
-        builder.Services.AddScoped<IEmulationStateRepository, EmulationStateRepository>();
-        builder.Services.AddScoped<IEmulator, DummyEmulator>();
+        builder.Services.AddResources(config);
 
         var jwt = config.GetSection("Jwt");
         builder.Services.AddAuthentication(options =>
@@ -45,9 +33,9 @@ public static class DependencyInjection
                 options.SaveToken = true;
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidateLifetime = true,
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ValidateLifetime = false,
                     ValidateIssuerSigningKey = true,
                     ValidIssuer = jwt.GetValue<string>("Issuer"),
                     ValidAudience = jwt.GetValue<string>("Audience"),
@@ -56,5 +44,25 @@ public static class DependencyInjection
             });
 
         return builder;
+    }
+
+    private static IServiceCollection AddResources(this IServiceCollection services, ConfigurationManager config)
+    {
+        var conn = config.GetConnectionString("DefaultConnection")!;
+        var database = config.GetSection("Mongo")["Database"]!;
+        var mongo = new MongoContext(new MongoClient(conn), database);
+
+        services.AddSingleton(mongo);
+        services.AddScoped<IMongoCollection<EmulationState>>(_ => mongo.StatesCollection);
+
+        {
+            services.AddSingleton<IEmulationStatesService, EmulationStatesService>();
+            services.AddSingleton<IEmulationTaskManager, EmulationTaskManger>();
+            services.AddSingleton<IEmulator, DummyEmulator>();
+
+            services.AddScoped<IEmulationStateRepository, EmulationStateRepository>();
+        }
+
+        return services;
     }
 }
