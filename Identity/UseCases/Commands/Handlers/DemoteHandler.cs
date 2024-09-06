@@ -1,4 +1,6 @@
-﻿namespace Identity.Api.App.Handlers;
+﻿using Identity.Core.Exceptions;
+
+namespace Identity.Api.App.Handlers;
 
 using Identity.Api.Commands;
 using Identity.Core;

@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Identity.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseCxModelSnapshot : ModelSnapshot
+    partial class DatabaseContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {

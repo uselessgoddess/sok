@@ -1,8 +1,8 @@
-﻿using Identity.Core;
-
-namespace Identity.Api.App.Handlers;
+﻿namespace Identity.Api.App.Handlers;
 
 using Identity.Api.Commands;
+using Identity.Core;
+using Identity.Core.Exceptions;
 using Identity.Core.Models;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
