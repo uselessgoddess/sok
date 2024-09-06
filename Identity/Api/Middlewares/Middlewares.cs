@@ -1,6 +1,6 @@
-﻿using Identity.Api.App.Middlewares;
+﻿namespace Identity.Api.Middlewares;
 
-namespace Identity.Api.Middlewares;
+using Identity.Api.App.Middlewares;
 
 public static class Middlewares
 {

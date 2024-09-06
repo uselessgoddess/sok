@@ -1,9 +1,7 @@
-﻿using Identity.UseCases.Services;
-
-namespace UseCases.Commands.Handlers;
+﻿namespace Identity.UseCases.Commands.Handlers;
 
 using Identity.Api.Commands;
-using Identity.Core;
+using Identity.Core.Exceptions;
 using Identity.Core.Interfaces;
 using Identity.Core.Models;
 using MediatR;

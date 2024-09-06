@@ -1,11 +1,11 @@
-﻿using Identity.Api.Commands;
-using Identity.Core;
+﻿namespace Identity.UseCases.Commands.Handlers;
+
+using Identity.Api.Commands;
+using Identity.Core.Exceptions;
 using Identity.Core.Interfaces;
 using Identity.Core.Models;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
-
-namespace UseCases.Commands.Handlers;
 
 public class RevokeHandler(
     UserManager<AppUser> users,

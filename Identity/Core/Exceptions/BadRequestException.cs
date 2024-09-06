@@ -1,3 +1,3 @@
 ﻿namespace Identity.Core.Exceptions;
 
-public class BadRequestException(string? message = default) : Exception(message);
+public class BadRequestException(string? message = "") : Exception(message);

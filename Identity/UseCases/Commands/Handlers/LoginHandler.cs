@@ -1,5 +1,6 @@
 ﻿namespace Identity.UseCases.Commands.Handlers;
 
+using Identity.Core.Exceptions;
 using Identity.Api.Commands;
 using Identity.Core;
 using Identity.Core.Interfaces;

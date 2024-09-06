@@ -1,5 +1,5 @@
 using Identity.Api;
-using Identity.Api.App.Middlewares;
+using Identity.Api.Middlewares;
 using Identity.Infrastructure;
 using Identity.Infrastructure.Data;
 using Identity.UseCases;
