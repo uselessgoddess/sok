@@ -1,4 +1,6 @@
-﻿using MediatR;
+﻿using Identity.Core.Interfaces;
+using Identity.Infrastructure.Repositories;
+using MediatR;
 
 namespace Identity.Infrastructure;
 
@@ -6,8 +8,6 @@ using System.Reflection;
 using System.Text;
 using Identity.Infrastructure.Data;
 using Identity.Core.Models;
-using Identity.Infrastructure.Services;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -17,14 +17,12 @@ using Microsoft.IdentityModel.Tokens;
 
 public static class DependencyInjection
 {
-    public static WebApplicationBuilder AddInfrastructure(this WebApplicationBuilder builder)
+    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration config)
     {
-        var config = builder.Configuration;
-
-        builder.Services.AddDbContext<DatabaseContext>(options =>
+        services.AddDbContext<DatabaseContext>(options =>
             options.UseSqlite(config.GetConnectionString("DefaultConnection")));
 
-        builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
+        services.AddIdentity<AppUser, IdentityRole>(options =>
             {
                 options.Password = new PasswordOptions
                 {
@@ -38,30 +36,8 @@ public static class DependencyInjection
             .AddEntityFrameworkStores<DatabaseContext>()
             .AddDefaultTokenProviders();
 
-        var jwt = config.GetSection("Jwt");
-        builder.Services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-            .AddJwtBearer(options =>
-            {
-                options.RequireHttpsMetadata = false;
-                options.SaveToken = true;
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidateLifetime = true,
-                    ValidateIssuerSigningKey = true,
-                    ValidIssuer = jwt.GetValue<string>("Issuer"),
-                    ValidAudience = jwt.GetValue<string>("Audience"),
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwt.GetValue<string>("Key"))),
-                };
-            });
+        services.AddScoped<IRefreshRepository, RefreshRepository>();
 
-        builder.Services.AddScoped<TokenService>();
-
-        return builder;
+        return services;
     }
 }

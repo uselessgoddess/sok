@@ -1,5 +1,6 @@
-﻿namespace Identity.Api.App.Controllers;
+﻿namespace Identity.Api.Controllers;
 
+using Identity.Api.App.Controllers;
 using Identity.Api.Commands;
 using Identity.Api.Queries;
 using MediatR;

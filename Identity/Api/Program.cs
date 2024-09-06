@@ -1,50 +1,22 @@
-using Identity;
 using Identity.Api;
-using Identity.Api.Middlewares;
+using Identity.Api.App.Middlewares;
 using Identity.Infrastructure;
 using Identity.Infrastructure.Data;
+using Identity.UseCases;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
+var config = builder.Configuration;
 
-builder.AddInfrastructure();
+builder.Services.AddInfrastructure(config);
+builder.Services.AddUseCases();
 builder.AddApi();
 
 builder.Services.AddControllers();
 builder.Services.AddDataValidation();
 
-builder.Services.AddAuthorizationBuilder()
-    .AddPolicy(Policy.Admin, policy => policy.RequireRole("Admin"));
-
-builder.Services.AddSwaggerGen(c =>
-{
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "IdentityService API", Version = "v1" });
-
-    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-    {
-        Name = "Authorization",
-        Type = SecuritySchemeType.ApiKey,
-        Scheme = "Bearer",
-        BearerFormat = "JWT",
-        In = ParameterLocation.Header,
-        Description = "Put JWT Token in Bearer format {token}",
-    });
-    c.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
-                {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "Bearer",
-                },
-            },
-            []
-        },
-    });
-});
+builder.Services.AddSwaggerGen(c => { c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()); });
 
 var app = builder.Build();
 

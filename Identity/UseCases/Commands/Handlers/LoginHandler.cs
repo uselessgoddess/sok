@@ -1,18 +1,17 @@
-﻿namespace Identity.Api.App.Handlers;
+﻿namespace Identity.UseCases.Commands.Handlers;
 
 using Identity.Api.Commands;
 using Identity.Core;
+using Identity.Core.Interfaces;
 using Identity.Core.Models;
-using Identity.Infrastructure.Data;
-using Identity.Infrastructure.Services;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 
 public class LoginHandler(
     UserManager<AppUser> users,
     SignInManager<AppUser> sign,
-    TokenService token,
-    DatabaseContext context) : IRequestHandler<Login, TokensPair?>
+    ITokenService token,
+    IRefreshRepository refresh) : IRequestHandler<Login, TokensPair?>
 {
     public async Task<TokensPair?> Handle(Login req, CancellationToken cancellationToken)
     {
@@ -26,11 +25,10 @@ public class LoginHandler(
 
         var user = await users.FindByNameAsync(req.Username);
         var roles = await users.GetEnumRolesAsync(user);
-        var refresh = token.Refresh(user.Id);
+        var newRefresh = token.Refresh(user.Id);
 
-        context.RefreshTokens.Add(refresh);
-        await context.SaveChangesAsync(cancellationToken);
+        await refresh.Add(newRefresh, cancellationToken);
 
-        return new TokensPair { Access = token.Access(user, roles), Refresh = refresh.Token };
+        return new TokensPair { Access = token.Access(user, roles), Refresh = newRefresh.Token };
     }
 }

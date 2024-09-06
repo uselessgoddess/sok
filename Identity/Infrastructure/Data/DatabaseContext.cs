@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 public class DatabaseContext(DbContextOptions<DatabaseContext> options) : IdentityDbContext<AppUser>(options)
 {
-    public DbSet<RefreshToken> RefreshTokens { get; set; }
+    public DbSet<RefreshToken> RefreshTokens { get; init; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

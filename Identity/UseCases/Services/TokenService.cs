@@ -1,14 +1,14 @@
-﻿using Identity.Core.Models;
-using Microsoft.Extensions.Configuration;
-
-namespace Identity.Infrastructure.Services;
-
-using System.IdentityModel.Tokens.Jwt;
+﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Identity.Core.Interfaces;
+using Identity.Core.Models;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
-public class TokenService(IConfiguration config)
+namespace Identity.UseCases.Services;
+
+public class TokenService(IConfiguration config) : ITokenService
 {
     public string Access(AppUser user, IEnumerable<Role> roles)
     {
