@@ -4,7 +4,7 @@ using VRisc.Core;
 
 public record struct EmulationTask
 {
-    public Task<EmulationResult> Task { get; init; }
+    public Task<CpuState> Task { get; init; }
 
     public Channels.Single<CpuState> Sync { get; init; }
 

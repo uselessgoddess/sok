@@ -6,7 +6,7 @@ using System.Collections.Concurrent;
 using VRisc.Core.Entities;
 using VRisc.Core.Interfaces;
 
-public class EmulationTaskManger(IEmulator emulator) : IEmulationTaskManager
+public class EmulationTaskManger : IEmulationTaskManager
 {
     private readonly ConcurrentDictionary<string, EmulationTask> tasks = new();
 
@@ -15,7 +15,7 @@ public class EmulationTaskManger(IEmulator emulator) : IEmulationTaskManager
         return tasks.GetValueOrDefault(user);
     }
 
-    public void RunTask(string user, CpuState state, Channels.Single<CpuState> channel, TimeSpan span)
+    public void RunTask(string user, IEmulator emulator, Channels.Single<CpuState> channel, TimeSpan span)
     {
         if (tasks.TryGetValue(user, out var old))
         {
@@ -25,7 +25,7 @@ public class EmulationTaskManger(IEmulator emulator) : IEmulationTaskManager
         var cancel = new CancellationTokenSource();
         var task = new EmulationTask
         {
-            Task = emulator.Run(state, channel, span, cancel.Token),
+            Task = emulator.Run(channel, span, cancel.Token),
             Sync = channel,
             Cancellation = cancel,
         };

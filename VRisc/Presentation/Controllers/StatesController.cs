@@ -37,7 +37,12 @@ public class StatesController(
     [HttpPut("/update-current")]
     public async Task UpdateCurrent([FromBody] EmulationStateDto dto)
     {
-        states.UpdateState(AuthUser, state => mapper.Map(dto, state));
+        states.UpdateState(AuthUser, state =>
+        {
+            state = mapper.Map(dto, state);
+            state.Modified = DateTime.Now;
+            return state;
+        });
     }
 
     [HttpPut("/load")]

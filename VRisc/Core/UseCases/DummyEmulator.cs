@@ -5,8 +5,13 @@ using VRisc.Core.Interfaces;
 
 public class DummyEmulator : IEmulator
 {
-    public Trap NextCycle(ref CpuState state)
+    public Trap NextCycle()
     {
         return Trap.Requested;
+    }
+
+    public CpuState GetState()
+    {
+        return new CpuState();
     }
 }

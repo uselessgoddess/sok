@@ -6,7 +6,7 @@ public interface IEmulationTaskManager
 {
     EmulationTask? GetTask(string user);
 
-    void RunTask(string user, CpuState state, Channels.Single<CpuState> channel, TimeSpan span);
+    public void RunTask(string user, IEmulator emulator, Channels.Single<CpuState> channel, TimeSpan span);
 
     void StopTask(string user);
 }

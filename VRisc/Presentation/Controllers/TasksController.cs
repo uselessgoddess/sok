@@ -1,4 +1,6 @@
-﻿namespace VRisc.Presentation.Controllers;
+﻿using VRisc.Core.UseCases;
+
+namespace VRisc.Presentation.Controllers;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -6,7 +8,6 @@ using VRisc.Core.Channels;
 using VRisc.Core.Entities;
 using VRisc.Core.Exceptions;
 using VRisc.Core.Interfaces;
-using TaskStatus = VRisc.Core.Entities.TaskStatus;
 
 [ApiController]
 [Authorize]
@@ -20,7 +21,9 @@ public class TasksController(IEmulationTaskManager tasks, IEmulationStatesServic
     {
         var state = states.GetState(AuthUser) ?? throw new NotFoundException();
 
-        tasks.RunTask(AuthUser, state.Cpu, Single<CpuState>.CreateChannel(), TimeSpan.FromMilliseconds(100));
+        tasks.RunTask(
+            AuthUser, new Emulator(state.Cpu), Single<CpuState>.CreateChannel(), TimeSpan.FromMilliseconds(100)
+        );
     }
 
     [HttpPost("/stop")]
@@ -28,7 +31,7 @@ public class TasksController(IEmulationTaskManager tasks, IEmulationStatesServic
     {
         tasks.StopTask(AuthUser);
     }
-    
+
     [HttpGet("/state")]
     public async Task<IActionResult> State()
     {
@@ -39,11 +42,11 @@ public class TasksController(IEmulationTaskManager tasks, IEmulationStatesServic
         return Ok(state);
     }
 
-    [HttpPut("/status")]
-    public async Task<IActionResult> Status()
+    [HttpGet("/completed-status")]
+    public async Task<IActionResult> Completed()
     {
         var task = tasks.GetTask(AuthUser)?.Task ?? throw new NotFoundException();
 
-        return task.IsCompleted ? Ok(task.Result.Fatal ? TaskStatus.Fatal : TaskStatus.Ready) : Ok(TaskStatus.Pending);
+        return Ok(task.IsCompleted);
     }
 }

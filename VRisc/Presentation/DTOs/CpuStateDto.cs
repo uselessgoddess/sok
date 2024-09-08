@@ -1,6 +1,6 @@
-﻿namespace VRisc.Core.Entities;
+﻿namespace VRisc.Presentation.DTOs;
 
-public class CpuState
+public class CpuStateDto
 {
     public ulong Pc { get; set; } = 0;
 
@@ -8,5 +8,5 @@ public class CpuState
 
     public float[] Fregs { get; set; } = [];
 
-    public BusState Bus { get; set; } = new();
+    public BusStateDto Bus { get; set; } = new();
 }
