@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Api", "VRisc\Api\Api.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "VRisc\Infrastructure\Infrastructure.csproj", "{5CCE76C2-5835-4A66-AC57-58E8A1AEFEFF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Presentation", "VRisc\Presentation\Presentation.csproj", "{318D6662-7690-46D0-B49F-DDFAB31B7A56}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UseCases", "VRisc\UseCases\UseCases.csproj", "{318D6662-7690-46D0-B49F-DDFAB31B7A56}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

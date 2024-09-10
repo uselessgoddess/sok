@@ -14,6 +14,11 @@ public class ExceptionsMiddleware(RequestDelegate next)
         {
             var code = StatusCode(ex);
 
+            if (code == 0)
+            {
+                throw;
+            }
+
             context.Response.StatusCode = code;
             context.Response.ContentType = "application/json";
 
@@ -33,7 +38,8 @@ public class ExceptionsMiddleware(RequestDelegate next)
             UnauthorizedException => 401,
             AlreadyExistsException => 403,
             NotFoundException => 404,
-            _ => 500,
+            TimeoutException => 408,
+            _ => 0,
         };
     }
 }

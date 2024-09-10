@@ -1,9 +1,9 @@
-﻿using VRisc.Core.Exceptions;
-
-namespace VRisc.Core.UseCases;
+﻿namespace VRisc.UseCases.Emulation;
 
 using System.Collections.Concurrent;
+using System.Threading.Channels;
 using VRisc.Core.Entities;
+using VRisc.Core.Exceptions;
 using VRisc.Core.Interfaces;
 
 public class EmulationTaskManger : IEmulationTaskManager
@@ -15,20 +15,19 @@ public class EmulationTaskManger : IEmulationTaskManager
         return tasks.GetValueOrDefault(user);
     }
 
-    public void RunTask(string user, IEmulator emulator, Channels.Single<CpuState> channel, TimeSpan span)
+    public void RunTask(string user, IEmulator emulator, Core.Channels.Single<CpuState> channel, TimeSpan span)
     {
-        if (tasks.TryGetValue(user, out var old))
-        {
-            old.Cancellation.Cancel();
-        }
-
         var cancel = new CancellationTokenSource();
+        var error = Channel.CreateBounded<Exception>(32);
+        var background = Task.Run(async () => await emulator.Run(channel, error, span, cancel.Token), cancel.Token);
         var task = new EmulationTask
         {
-            Task = emulator.Run(channel, span, cancel.Token),
+            Task = background,
             Sync = channel,
+            Error = error,
             Cancellation = cancel,
         };
+
         tasks.AddOrUpdate(user, task, (_, old) =>
         {
             old.Cancellation.Cancel();

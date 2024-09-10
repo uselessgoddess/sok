@@ -1,4 +1,4 @@
-﻿namespace VRisc.Presentation.Controllers;
+﻿namespace VRisc.Api.Controllers;
 
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using VRisc.Core.Entities;
 using VRisc.Core.Exceptions;
 using VRisc.Core.Interfaces;
-using VRisc.Presentation.DTOs;
+using VRisc.Api.DTOs;
 
 [ApiController]
 [Authorize]
@@ -22,7 +22,7 @@ public class StatesController(
     [HttpGet("/current")]
     public async Task<IActionResult> Current()
     {
-        return Ok(states.GetState(AuthUser));
+        return Ok(states.GetState(AuthUser) ?? throw new NotFoundException());
     }
 
     [HttpPost("/new")]
@@ -30,6 +30,17 @@ public class StatesController(
     {
         var state = new EmulationState(AuthUser);
         states.SetState(AuthUser, state);
+
+        return Ok(state);
+    }
+
+    [HttpPost("/save")]
+    public async Task<IActionResult> Save()
+    {
+        var state = states.GetState(AuthUser) ?? throw new NotFoundException();
+        state.Modified = DateTime.Now;
+
+        await repo.StoreState(state);
 
         return Ok(state);
     }

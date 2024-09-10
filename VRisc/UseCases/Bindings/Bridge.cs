@@ -1,19 +1,7 @@
-﻿namespace VRisc.Core.Bindings;
+﻿namespace VRisc.UseCases.Bindings;
 
+using VRisc.Core.Bindings;
 using VRisc.Core.Entities;
-
-public static class XSlice
-{
-    public static unsafe Slice<ulong> FromXregs(ulong* xregs)
-    {
-        return new Slice<ulong> { ptr = xregs, len = 32 };
-    }
-
-    public static unsafe ulong* IntoXregs(this Slice<ulong> slice)
-    {
-        return slice.ptr;
-    }
-}
 
 public static class Bridge
 {
@@ -21,10 +9,18 @@ public static class Bridge
     {
         unsafe
         {
+            var xregs = new ulong[32];
+
+            for (var i = 0; i < 32 && i < cpu.xregs.len; i++)
+            {
+                xregs[i] = cpu.xregs.regs[i];
+            }
+
             return new CpuState
             {
                 Pc = cpu.pc,
-                Xregs = XSlice.FromXregs(cpu.xregs).IntoArray(),
+                Mode = cpu.mode,
+                Xregs = xregs,
                 Bus = new BusState
                 {
                     Dram = cpu.bus.dram.IntoArray(),
@@ -40,16 +36,19 @@ public static class Bridge
             var repr = new CpuRepr
             {
                 pc = cpu.Pc,
+                mode = cpu.Mode,
                 bus = new BusRepr
                 {
                     dram = Slice<byte>.FromArray(cpu.Bus.Dram),
                 },
             };
 
-            for (var i = 0; i < 32; i++)
+            for (var i = 0; i < 32 && i < cpu.Xregs.Length; i++)
             {
-                repr.xregs[i] = cpu.Xregs[i];
+                repr.xregs.regs[i] = cpu.Xregs[i];
             }
+
+            repr.xregs.len = (byte)cpu.Xregs.Length;
 
             return repr;
         }

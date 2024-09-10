@@ -1,6 +1,6 @@
-﻿using VRisc.Core.UseCases;
+﻿using VRisc.UseCases.Emulation;
 
-namespace VRisc.Presentation.Controllers;
+namespace VRisc.Api.Controllers;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -35,11 +35,21 @@ public class TasksController(IEmulationTaskManager tasks, IEmulationStatesServic
     [HttpGet("/state")]
     public async Task<IActionResult> State()
     {
-        var sync = tasks.GetTask(AuthUser)?.Sync ?? throw new NotFoundException();
+        var status = tasks.GetTask(AuthUser) ?? throw new NotFoundException();
 
-        var state = await sync.Reader.ReadAsync();
+        if (status.Error.Reader.TryRead(out var exception))
+        {
+            throw exception;
+        }
 
-        return Ok(state);
+        var rxState = status.Sync.Reader.PeekAsync().AsTask();
+
+        if (await Task.WhenAny(rxState, Task.Delay(1000)) == rxState)
+        {
+            return Ok(rxState.Result);
+        }
+
+        throw new TimeoutException();
     }
 
     [HttpGet("/completed-status")]

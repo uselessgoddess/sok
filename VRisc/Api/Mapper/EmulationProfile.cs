@@ -2,7 +2,7 @@
 
 using AutoMapper;
 using VRisc.Core.Entities;
-using VRisc.Presentation.DTOs;
+using VRisc.Api.DTOs;
 
 public class EmulationProfile : Profile
 {

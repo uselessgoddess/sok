@@ -1,4 +1,4 @@
-﻿namespace VRisc.Core.UseCases;
+﻿namespace VRisc.UseCases.Emulation;
 
 using VRisc.Core.Entities;
 using VRisc.Core.Interfaces;

@@ -11,7 +11,7 @@ using System.Runtime.InteropServices;
 
 internal static unsafe partial class NativeEmulator
 {
-    const string __DllName = "vrisc";
+    const string __DllName = "ffi";
     
     [DllImport(__DllName, EntryPoint = "vmalloc", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
     internal static extern byte* vmalloc(ulong len);
@@ -46,7 +46,7 @@ public unsafe partial struct Slice<T>
     {
         var length = (uint)bytes.Length;
         var dst = (T*)NativeEmulator.vmalloc((ulong)(length * sizeof(T)));
-        fixed (T* src = &bytes[0])
+        fixed (T* src = bytes)
         {
             Unsafe.CopyBlock(dst, src, length);
         }
@@ -56,9 +56,9 @@ public unsafe partial struct Slice<T>
     public unsafe T[] IntoArray(bool dealloc = true)
     {
         T[] bytes = new T[len];
-        fixed (T* dst = &bytes[0])
+        fixed (T* dst = bytes)
         {
-            Unsafe.CopyBlock(dst, ptr, (uint)(len * sizeof(T)));
+            Unsafe.CopyBlock(dst, ptr, (uint)len);
         }
 
         if (dealloc)
@@ -68,6 +68,13 @@ public unsafe partial struct Slice<T>
         
         return bytes;
     }
+}
+
+[StructLayout(LayoutKind.Sequential)]
+public unsafe partial struct RegPlace
+{
+    public fixed ulong regs[32];
+    public byte len;
 }
 
 [StructLayout(LayoutKind.Sequential)]
@@ -81,7 +88,7 @@ public unsafe partial struct CpuRepr
 {
     public ulong pc;
     public Mode mode;
-    public fixed ulong xregs[32];
+    public RegPlace xregs;
     public BusRepr bus;
 }
 
@@ -90,11 +97,3 @@ public unsafe partial struct EmuRepr
 {
     public CpuRepr cpu;
 }
-
-public enum Mode : uint
-{
-    User = 0,
-    Supervisor = 1,
-    Machine = 3,
-}
-

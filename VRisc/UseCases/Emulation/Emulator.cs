@@ -1,4 +1,6 @@
-﻿namespace VRisc.Core.UseCases;
+﻿using VRisc.UseCases.Bindings;
+
+namespace VRisc.UseCases.Emulation;
 
 using VRisc.Core.Bindings;
 using VRisc.Core.Entities;
@@ -8,7 +10,7 @@ public class Emulator : IEmulator
 {
     public const ulong RAM = 1024 * 1024;
 
-    private readonly unsafe void* _inner;
+    public readonly unsafe void* _inner;
 
     public Emulator(CpuState cpu)
     {

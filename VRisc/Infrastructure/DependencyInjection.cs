@@ -8,10 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using MongoDB.Driver;
 using VRisc.Core.Entities;
-using VRisc.Core.Interfaces;
-using VRisc.Core.UseCases;
 using VRisc.Infrastructure.Data;
-using VRisc.Infrastructure.Repositories;
 
 public static class DependencyInjection
 {
@@ -54,14 +51,6 @@ public static class DependencyInjection
 
         services.AddSingleton(mongo);
         services.AddScoped<IMongoCollection<EmulationState>>(_ => mongo.StatesCollection);
-
-        {
-            services.AddSingleton<IEmulationStatesService, EmulationStatesService>();
-            services.AddSingleton<IEmulationTaskManager, EmulationTaskManger>();
-            services.AddSingleton<IEmulator, DummyEmulator>();
-
-            services.AddScoped<IEmulationStateRepository, EmulationStateRepository>();
-        }
 
         return services;
     }

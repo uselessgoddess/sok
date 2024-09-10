@@ -1,10 +1,12 @@
 ﻿namespace VRisc.Core.Entities;
 
-using VRisc.Core;
+using System.Threading.Channels;
 
 public record struct EmulationTask
 {
-    public Task<CpuState> Task { get; init; }
+    public Task Task { get; init; }
+
+    public Channel<Exception> Error { get; init; }
 
     public Channels.Single<CpuState> Sync { get; init; }
 

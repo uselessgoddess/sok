@@ -9,20 +9,32 @@ public interface IEmulator
 
     CpuState GetState();
 
-    async Task<CpuState> Run(Channel<CpuState> channel, TimeSpan span, CancellationToken token)
+    async Task Run(
+        Channels.Single<CpuState> state, Channel<Exception> error, TimeSpan span, CancellationToken token)
     {
-        var timer = DateTime.Now;
+        var timer = DateTime.UnixEpoch;
 
         while (true)
         {
-            if (NextCycle() == Trap.Fatal)
+            try
             {
-                return GetState();
-            }
+                var trap = NextCycle();
 
-            if (DateTime.Now.Subtract(timer) >= span)
+                if (trap == Trap.Fatal || DateTime.Now.Subtract(timer) >= span)
+                {
+                    timer = DateTime.Now;
+
+                    await state.Writer.WriteAsync(GetState(), token);
+                }
+
+                if (trap == Trap.Fatal)
+                {
+                    break;
+                }
+            }
+            catch (Exception ex)
             {
-                await channel.Writer.WriteAsync(GetState(), token);
+                await error.Writer.WriteAsync(ex, token);
             }
         }
     }

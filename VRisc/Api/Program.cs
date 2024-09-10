@@ -1,28 +1,23 @@
 using Microsoft.OpenApi.Models;
+using VRisc.Api;
+using VRisc.Api.Hubs;
 using VRisc.Api.Middlewares;
 using VRisc.Infrastructure;
 using VRisc.Presentation;
-using VRisc.Presentation.Hubs;
+using VRisc.UseCases;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddInfrastructure();
-builder.Services.AddPresentation();
+builder.Services.AddUseCases();
+builder.Services.AddApi();
 
 builder.Services.AddControllers();
+builder.Services.AddDataValidation();
 
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "VRisc API", Version = "v1" });
-    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-    {
-        Name = "Authorization",
-        Type = SecuritySchemeType.ApiKey,
-        Scheme = "Bearer",
-        BearerFormat = "JWT",
-        In = ParameterLocation.Header,
-        Description = "Put JWT Token in Bearer format {token}",
-    });
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme());
     c.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
         {
@@ -31,14 +26,13 @@ builder.Services.AddSwaggerGen(c =>
                 Reference = new OpenApiReference
                 {
                     Type = ReferenceType.SecurityScheme,
-                    Id = "Bearer"
+                    Id = "Bearer",
                 },
             },
             []
         },
     });
 });
-
 
 var app = builder.Build();
 

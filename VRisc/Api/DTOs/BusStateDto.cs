@@ -1,4 +1,4 @@
-﻿namespace VRisc.Presentation.DTOs;
+﻿namespace VRisc.Api.DTOs;
 
 public class BusStateDto
 {
