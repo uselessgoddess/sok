@@ -1,0 +1,14 @@
+﻿services:
+  mongo:
+    image: mongo
+    restart: always
+    ports:
+      - "27017:27017"
+
+  vrisc.service:
+    build: ./VRisc
+    restart: always
+    ports:
+      - "6002:8080"
+    depends_on:
+      - mongo

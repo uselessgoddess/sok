@@ -1,0 +1,3 @@
+[submodule "VRisc/native"]
+	path = VRisc/native
+	url = https://github.com/uselessgoddess/vrisc
