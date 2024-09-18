@@ -6,4 +6,12 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+        <Protobuf Include="Protos\compiler.proto" GrpcServices="Compiler" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Grpc.AspNetCore" Version="2.65.0" />
+    </ItemGroup>
+
 </Project>
