@@ -1,9 +1,9 @@
-﻿namespace Core;
+﻿namespace Compiler.Core;
 
-using Core.Compilers;
-using Core.Interfaces;
-using Microsoft.Extensions.DependencyInjection;
+using Compiler.Core.Interfaces;
+using Compiler.Core.Compilers;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
 
 public static class DependencyInjection
 {

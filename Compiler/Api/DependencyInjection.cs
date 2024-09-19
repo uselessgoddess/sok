@@ -1,8 +1,8 @@
-﻿using System.Text;
+﻿namespace Compiler.Api;
+
+using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-
-namespace Api;
 
 public static class DependencyInjection
 {

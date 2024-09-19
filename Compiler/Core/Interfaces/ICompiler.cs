@@ -1,6 +1,6 @@
-﻿using GrpcServices;
+﻿namespace Compiler.Core.Interfaces;
 
-namespace Core.Interfaces;
+using GrpcServices;
 
 public interface ICompiler
 {

@@ -1,8 +1,8 @@
-﻿using Core.Interfaces;
+﻿namespace Compiler.Core.Compilers;
+
+using Compiler.Core.Interfaces;
 using Google.Protobuf;
 using GrpcServices;
-
-namespace Core.Compilers;
 
 public class ProcessCompiler : ICompiler
 {
@@ -21,7 +21,7 @@ public class ProcessCompiler : ICompiler
 
         File.Delete(src);
         File.Delete(bin);
-        
+
         return new CompileResponse
         {
             Success = result.Success,

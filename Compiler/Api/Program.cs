@@ -1,6 +1,6 @@
-using Api;
-using Core;
-using Core.Services;
+using Compiler.Api;
+using Compiler.Core;
+using Compiler.Core.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 

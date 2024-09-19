@@ -1,4 +1,4 @@
-﻿namespace Data.Compilers;
+﻿namespace Compiler.Data.Compilers;
 
 using System.Diagnostics;
 
@@ -21,7 +21,7 @@ public class ProcessCompiler(string compiler = "driver")
         });
 
         _ = process.Start();
-        
+
         await process.WaitForExitAsync(token);
 
         return new CompilationResult
