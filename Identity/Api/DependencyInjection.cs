@@ -1,38 +1,16 @@
 ﻿namespace Identity.Api;
 
-using System.Text;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 
 public static class DependencyInjection
 {
-    public static WebApplicationBuilder AddApi(this WebApplicationBuilder builder)
+    public static IServiceCollection AddApi(this IServiceCollection services)
     {
-        var jwt = builder.Configuration.GetSection("Jwt");
-        builder.Services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-            .AddJwtBearer(options =>
-            {
-                options.RequireHttpsMetadata = false;
-                options.SaveToken = true;
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidateLifetime = true,
-                    ValidateIssuerSigningKey = true,
-                    ValidIssuer = jwt.GetValue<string>("Issuer"),
-                    ValidAudience = jwt.GetValue<string>("Audience"),
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwt.GetValue<string>("Key")!)),
-                };
-            });
+        services.AddControllers();
+        services.AddDataValidation();
 
-        builder.Services.AddAuthorizationBuilder()
-            .AddPolicy(Policy.Admin, policy => policy.RequireRole("Admin"));
+        services.AddSwaggerGen(c => { c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()); });
 
-        return builder;
+        return services;
     }
 }

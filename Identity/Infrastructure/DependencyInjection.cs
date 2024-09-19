@@ -1,10 +1,10 @@
 ﻿using Identity.Core.Interfaces;
 using Identity.Infrastructure.Repositories;
 using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace Identity.Infrastructure;
 
-using System.Reflection;
 using System.Text;
 using Identity.Infrastructure.Data;
 using Identity.Core.Models;
@@ -19,6 +19,32 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration config)
     {
+        var jwt = config.GetSection("Jwt");
+        services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
+            {
+                options.RequireHttpsMetadata = false;
+                options.SaveToken = true;
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = jwt.GetValue<string>("Issuer"),
+                    ValidAudience = jwt.GetValue<string>("Audience"),
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwt.GetValue<string>("Key")!)),
+                };
+            });
+
+        services.AddAuthorizationBuilder()
+            .AddPolicy(Policy.Admin, policy => policy.RequireRole("Admin"));
+
+        
         services.AddDbContext<DatabaseContext>(options =>
             options.UseSqlite(config.GetConnectionString("DefaultConnection")));
 

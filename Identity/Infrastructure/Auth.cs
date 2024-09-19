@@ -1,4 +1,4 @@
-﻿namespace Identity;
+﻿namespace Identity.Infrastructure;
 
 public static class Policy
 {

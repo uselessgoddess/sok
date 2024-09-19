@@ -1,4 +1,6 @@
-﻿namespace Identity.Api.Controllers;
+﻿using Identity.Infrastructure;
+
+namespace Identity.Api.Controllers;
 
 using Identity.Api.App.Controllers;
 using Identity.Api.Commands;
