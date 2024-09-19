@@ -6,20 +6,22 @@ using GrpcServices;
 
 public class ProcessCompiler : ICompiler
 {
-    public async Task<CompileResponse> Compile(string source, CancellationToken token = default)
+    public async Task<CompileResponse> Compile(string source, string opt, CancellationToken token = default)
     {
-        var bin = Guid.NewGuid().ToString();
-        var src = bin + ".src";
+        var elf = Guid.NewGuid().ToString();
+        var src = elf + ".src";
+        var bin = elf + ".bin";
 
         await File.WriteAllTextAsync(src, source, token);
 
-        var result = await new Data.Compilers.ProcessCompiler().Compile(src, token);
+        var result = await new Data.Compilers.ProcessCompiler().Compile(src, elf, opt, token);
 
         var binary = result.Success
             ? await ByteString.FromStreamAsync(File.OpenRead(bin), token)
             : ByteString.Empty;
 
         File.Delete(src);
+        File.Delete(elf);
         File.Delete(bin);
 
         return new CompileResponse

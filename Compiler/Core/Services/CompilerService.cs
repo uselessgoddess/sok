@@ -8,6 +8,6 @@ public class CompilerService(ICompiler compiler) : GrpcServices.Compiler.Compile
 {
     public override async Task<CompileResponse> CompileCode(CompileRequest request, ServerCallContext _)
     {
-        return await compiler.Compile(request.Source);
+        return await compiler.Compile(request.Source, request.OptLevel);
     }
 }

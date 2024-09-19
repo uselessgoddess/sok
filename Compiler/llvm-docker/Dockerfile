@@ -1,7 +1,7 @@
 ﻿ARG UBUNTU_VERSION=22.04
 ARG LLVM_URL="https://github.com/llvm/llvm-project"
-ARG LLVM_TAG="19.1.0-rc4"
-ARG BUILD_TYPE=Release
+ARG LLVM_TAG="19.1.0"
+ARG BUILD_TYPE=MinSizeRel
 ARG PROJECTS="llvm"
 ARG TARGETS=RISCV
 
@@ -16,7 +16,7 @@ ARG TARGETS
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN apt-get update -q && apt-get install -y curl tar libssl-dev cmake ninja-build python3 python3-distutils build-essential gcc g++ gcc-multilib \
+RUN apt-get update -q && apt-get install -y mold curl tar libssl-dev cmake ninja-build python3 python3-distutils build-essential gcc g++ gcc-multilib \
     && apt-get autoremove -y --purge \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/*
@@ -27,10 +27,10 @@ RUN cd /tmp/ && curl -o src.tar.xz https://github.com/llvm/llvm-project/releases
 RUN mkdir /tmp/llvm-project/build && mkdir /tmp/llvm && cd /tmp/llvm-project/build \
     && cmake -G Ninja ../llvm -Wno-dev \
     -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DLLVM_ENABLE_ASSERTIONS=ON -DCMAKE_INSTALL_PREFIX=/tmp/llvm \
-    -DCMAKE_C_COMPILER="gcc" -DCMAKE_CXX_COMPILER="g++" -DLLVM_USE_LINKER="gold" -DLLVM_TARGETS_TO_BUILD="$TARGETS" \
+    -DCMAKE_C_COMPILER="gcc" -DCMAKE_CXX_COMPILER="g++" -DLLVM_USE_LINKER="mold" -DLLVM_TARGETS_TO_BUILD="$TARGETS" \
     -DLLVM_ENABLE_PROJECTS=$PROJECTS -DLLVM_USE_SPLIT_DWARF=ON \
     -DLLVM_INCLUDE_EXAMPLES=OFF -DLLVM_INCLUDE_TESTS=OFF -DLLVM_INCLUDE_BENCHMARKS=OFF \
-    -DLLVM_PARALLEL_LINK_JOBS=8 -DLLVM_ENABLE_ZLIB=OFF \
+    -DLLVM_PARALLEL_LINK_JOBS=2 -DLLVM_ENABLE_ZLIB=OFF \
     && cmake --build . && cmake --build . --target install
 
 FROM ubuntu:$UBUNTU_VERSION

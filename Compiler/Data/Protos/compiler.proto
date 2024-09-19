@@ -8,6 +8,7 @@ service Compiler {
 
 message CompileRequest {
   string source = 1;
+  string optLevel = 2;
 }
 
 message CompileResponse {
