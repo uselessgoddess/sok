@@ -1,16 +1,11 @@
 using Compiler.Api;
 using Compiler.Core;
 using Compiler.Core.Services;
+using Compiler.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.AddCore();
-builder.AddApi();
-
-builder.Services.AddControllers();
-builder.Services.AddSwaggerGen();
-
-builder.Services.AddGrpc();
+builder.AddData().AddCore().AddApi();
 
 var app = builder.Build();
 
