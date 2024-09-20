@@ -8,18 +8,26 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using MongoDB.Driver;
 using VRisc.Core.Entities;
+using VRisc.Core.Interfaces;
 using VRisc.Infrastructure.Data;
+using VRisc.Infrastructure.Repositories;
+using VRisc.Infrastructure.Services;
 
 public static class DependencyInjection
 {
-    public static WebApplicationBuilder AddInfrastructure(this WebApplicationBuilder builder)
+    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration config)
     {
-        var config = builder.Configuration;
+        services
+            .AddAuthentication(config)
+            .AddResources(config)
+            .AddServices();
+        return services;
+    }
 
-        builder.Services.AddResources(config);
-
+    private static IServiceCollection AddAuthentication(this IServiceCollection services, IConfiguration config)
+    {
         var jwt = config.GetSection("Jwt");
-        builder.Services.AddAuthentication(options =>
+        services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -39,19 +47,27 @@ public static class DependencyInjection
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwt.GetValue<string>("Key"))),
                 };
             });
-
-        return builder;
+        return services;
     }
 
-    private static IServiceCollection AddResources(this IServiceCollection services, ConfigurationManager config)
+    private static IServiceCollection AddResources(this IServiceCollection services, IConfiguration config)
     {
         var conn = config.GetConnectionString("DefaultConnection")!;
         var database = config.GetSection("Mongo")["Database"]!;
         var mongo = new MongoContext(new MongoClient(conn), database);
 
-        services.AddSingleton(mongo);
-        services.AddScoped<IMongoCollection<EmulationState>>(_ => mongo.StatesCollection);
+        services.AddSingleton(mongo)
+            .AddScoped<IMongoCollection<EmulationState>>(_ => mongo.StatesCollection);
 
+        return services;
+    }
+
+    private static IServiceCollection AddServices(this IServiceCollection services)
+    {
+        services
+            .AddSingleton<IEmulationStatesService, EmulationStatesService>()
+            .AddSingleton<IEmulationTaskManager, EmulationTaskManager>()
+            .AddScoped<IEmulationStateRepository, EmulationStateRepository>();
         return services;
     }
 }
