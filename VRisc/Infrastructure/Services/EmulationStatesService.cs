@@ -1,4 +1,4 @@
-﻿namespace VRisc.UseCases.Emulation;
+﻿namespace VRisc.Infrastructure.Services;
 
 using System.Collections.Concurrent;
 using VRisc.Core.Entities;

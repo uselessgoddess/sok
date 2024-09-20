@@ -3,82 +3,55 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using VRisc.Core.Entities;
-using VRisc.Core.Exceptions;
-using VRisc.Core.Interfaces;
 using VRisc.Api.DTOs;
+using VRisc.UseCases.Handlers;
 
 [ApiController]
 [Authorize]
 [Route("api/states")]
-public class StatesController(
-    IEmulationStatesService states,
-    IEmulationStateRepository repo,
-    IMapper mapper)
-    : ControllerBase
+public class StatesController(StatesHandler handler, IMapper mapper) : ControllerBase
 {
     private string AuthUser => HttpContext.User.Identity!.Name!;
 
     [HttpGet("/current")]
     public async Task<IActionResult> Current()
     {
-        return Ok(states.GetState(AuthUser) ?? throw new NotFoundException());
+        return Ok(handler.Current(AuthUser));
     }
 
     [HttpPost("/new")]
     public async Task<IActionResult> New()
     {
-        var state = new EmulationState(AuthUser);
-        states.SetState(AuthUser, state);
-
-        return Ok(state);
+        return Ok(handler.New(AuthUser));
     }
 
     [HttpPost("/save")]
     public async Task<IActionResult> Save()
     {
-        var state = states.GetState(AuthUser) ?? throw new NotFoundException();
-        state.Modified = DateTime.Now;
-
-        await repo.StoreState(state);
-
-        return Ok(state);
+        return Ok(handler.Save(AuthUser));
     }
 
     [HttpPut("/update-current")]
     public async Task UpdateCurrent([FromBody] EmulationStateDto dto)
     {
-        states.UpdateState(AuthUser, state =>
-        {
-            state = mapper.Map(dto, state);
-            state.Modified = DateTime.Now;
-            return state;
-        });
+        handler.UpdateCurrent(AuthUser, state => mapper.Map(dto, state));
     }
 
     [HttpPut("/load")]
     public async Task Load(string id)
     {
-        var state = await repo.LoadState(id);
-
-        states.SetState(AuthUser, state);
+        await handler.LoadAsync(AuthUser, id);
     }
 
     [HttpPut("/load-dram")]
     public async Task LoadDram([FromBody] byte[] dram)
     {
-        states.UpdateState(AuthUser, state =>
-        {
-            state.Cpu.Bus.Dram = dram;
-            return state;
-        });
+        handler.LoadDram(AuthUser, dram);
     }
 
     [HttpGet("/sessions")]
     public async Task<IActionResult> Sessions(uint page, uint size)
     {
-        var list = await repo.LoadStates(AuthUser);
-
-        return Ok(list.Skip((int)(page * size)).Take((int)size));
+        return Ok(handler.Sessions(AuthUser, page, size));
     }
 }

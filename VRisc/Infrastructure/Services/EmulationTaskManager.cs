@@ -1,4 +1,4 @@
-﻿namespace VRisc.UseCases.Emulation;
+﻿namespace VRisc.Infrastructure.Services;
 
 using System.Collections.Concurrent;
 using System.Threading.Channels;
@@ -6,7 +6,7 @@ using VRisc.Core.Entities;
 using VRisc.Core.Exceptions;
 using VRisc.Core.Interfaces;
 
-public class EmulationTaskManger : IEmulationTaskManager
+public class EmulationTaskManager : IEmulationTaskManager
 {
     private readonly ConcurrentDictionary<string, EmulationTask> tasks = new();
 
