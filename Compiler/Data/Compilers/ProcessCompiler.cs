@@ -30,14 +30,11 @@ public class ProcessCompiler(string compiler = "driver")
     public async Task<CompilationResult> Compile(string srcPath, string elfPath, string opt,
         CancellationToken token = default)
     {
-        const string LLD =
-            "/root/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/x86_64-unknown-linux-gnu/bin/rust-lld";
+        var elf = await RunProcess(compiler,
+            $"{srcPath} --target riscv32i-unknown-none-elf -Copt-level={opt} --no-main", token);
 
-        var elf = await RunProcess(
-            compiler, $"{srcPath} --target riscv32i-unknown-none-elf " +
-                      $"-Clinker={LLD} -Copt-level={opt}", token);
-
-        _ = await RunProcess("llvm-objcopy", $"-S -O binary {elfPath} {elfPath}.bin", token);
+        _ = await RunProcess("llvm-objcopy", 
+            $"-S -O binary --only-section=.text {elfPath} {elfPath}.bin", token);
 
         return new CompilationResult
         {

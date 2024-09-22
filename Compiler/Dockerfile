@@ -25,6 +25,7 @@ RUN apt-get update -q && apt-get install -y curl cmake build-essential gcc g++ g
 
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain=nightly
 ENV PATH="/root/.cargo/bin:${PATH}"
+ENV PATH="/root/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/x86_64-unknown-linux-gnu/bin:${PATH}"
 
 COPY */*.csproj .
 RUN find *.csproj -exec sh -c 'mkdir -p "${1%.*}" && cp "$1" "${1%.*}/"' _ {} \;

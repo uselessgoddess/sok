@@ -8,11 +8,18 @@ public class ProcessCompiler : ICompiler
 {
     public async Task<CompileResponse> Compile(string source, string opt, CancellationToken token = default)
     {
+        var template = $$"""
+            #[no_mangle]
+            extern "C" fn _start() -> ! {
+                {{source}}
+            }
+        """;
+
         var elf = Guid.NewGuid().ToString();
         var src = elf + ".src";
         var bin = elf + ".bin";
 
-        await File.WriteAllTextAsync(src, source, token);
+        await File.WriteAllTextAsync(src, template, token);
 
         var result = await new Data.Compilers.ProcessCompiler().Compile(src, elf, opt, token);
 
