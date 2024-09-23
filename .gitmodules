@@ -1,0 +1,4 @@
+[submodule "Compiler/zxc"]
+	path = Compiler/zxc
+	url = https://github.com/uselessgoddess/zxc
+	branch = feat/riscv
