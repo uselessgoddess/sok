@@ -1,0 +1,7 @@
+﻿services:
+  compiler.service:
+    build: ./Compiler
+    restart: always
+    ports:
+      - "6003:8080"
+ 
