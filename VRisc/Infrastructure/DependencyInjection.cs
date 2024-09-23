@@ -1,4 +1,8 @@
-﻿namespace VRisc.Infrastructure;
+﻿using Grpc.Net.Client;
+using GrpcServices;
+using VRisc.Infrastructure.Grpc;
+
+namespace VRisc.Infrastructure;
 
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -20,7 +24,7 @@ public static class DependencyInjection
         services
             .AddAuthentication(config)
             .AddResources(config)
-            .AddServices();
+            .AddServices(config);
         return services;
     }
 
@@ -62,9 +66,14 @@ public static class DependencyInjection
         return services;
     }
 
-    private static IServiceCollection AddServices(this IServiceCollection services)
+    private static IServiceCollection AddServices(this IServiceCollection services, IConfiguration config)
     {
+        services.AddGrpcClient<Compiler.CompilerClient>(o =>
+        {
+            o.Address = new Uri(config.GetSection("Grpc")["Address"]);
+        });
         services
+            .AddSingleton<GrpcCompilerService>()
             .AddSingleton<IEmulationStatesService, EmulationStatesService>()
             .AddSingleton<IEmulationTaskManager, EmulationTaskManager>()
             .AddScoped<IEmulationStateRepository, EmulationStateRepository>();

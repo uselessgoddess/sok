@@ -1,12 +1,16 @@
-﻿namespace VRisc.UseCases.Handlers;
+﻿using GrpcServices;
+
+namespace VRisc.UseCases.Handlers;
 
 using VRisc.Core.Entities;
 using VRisc.Core.Exceptions;
 using VRisc.Core.Interfaces;
+using VRisc.Infrastructure.Services;
 
 public class StatesHandler(
     IEmulationStatesService states,
-    IEmulationStateRepository repo)
+    IEmulationStateRepository repo,
+    GrpcCompilerService compiler)
 {
     public EmulationState Current(string user)
     {
@@ -53,6 +57,26 @@ public class StatesHandler(
         states.UpdateState(user, state =>
         {
             state.Cpu.Bus.Dram = dram;
+            return state;
+        });
+    }
+
+    public async Task LoadCode(string user, string jwt, string code)
+    {
+        var compiled = await compiler.CompileAsync(jwt, new CompileRequest
+        {
+            OptLevel = "0",
+            Source = code,
+        });
+
+        if (!compiled.Success)
+        {
+            throw new BadRequestException(compiled.Message);
+        }
+
+        states.UpdateState(user, state =>
+        {
+            state.Cpu.Bus.Dram = compiled.Binary.ToByteArray();
             return state;
         });
     }
