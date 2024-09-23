@@ -1,5 +1,5 @@
 ﻿using Identity.Core.Interfaces;
-using Identity.UseCases.Services;
+using Identity.Infrastructure.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Identity.UseCases;

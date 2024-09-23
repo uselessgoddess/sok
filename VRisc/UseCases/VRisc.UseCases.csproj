@@ -4,13 +4,12 @@
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <RootNamespace>VRisc.UseCases</RootNamespace>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Core\Core.csproj" />
-      <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
+      <ProjectReference Include="..\Core\VRisc.Core.csproj" />
+      <ProjectReference Include="..\Infrastructure\VRisc.Infrastructure.csproj" />
     </ItemGroup>
 
     <ItemGroup>
