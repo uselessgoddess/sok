@@ -11,4 +11,9 @@
     ports:
       - "6002:8080"
     depends_on:
-      - mongo
+
+  compiler.service:
+    build: ./Compiler
+    restart: always
+    ports:
+      - "6003:8080"
