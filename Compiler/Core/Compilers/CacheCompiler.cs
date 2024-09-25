@@ -1,10 +1,11 @@
 ﻿using Compiler.Core.Interfaces;
 using Compiler.Data.Cache;
+using Google.Protobuf;
 using GrpcServices;
 
 namespace Compiler.Core.Compilers;
 
-public class CacheCompiler(ICacheService<CompileResponse> cache, ICompiler inner) : ICompiler
+public class CacheCompiler(ICacheService cache, ICompiler inner) : ICompiler
 {
     public async Task<CompileResponse> Compile(string src, string opt, CancellationToken token = default)
     {
@@ -14,12 +15,12 @@ public class CacheCompiler(ICacheService<CompileResponse> cache, ICompiler inner
 
         if (val != null)
         {
-            return val;
+            return CompileResponse.Parser.ParseFrom(val);
         }
 
         var res = await inner.Compile(src, opt, token);
 
-        await cache.SetCacheAsync(key, res);
+        await cache.SetCacheAsync(key, res.ToByteArray());
 
         return res;
     }

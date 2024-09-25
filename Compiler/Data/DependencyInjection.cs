@@ -17,7 +17,7 @@ public static class DependencyInjection
         var redis = config.GetConnectionString("Redis");
         services
             .AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect(redis))
-            .AddSingleton<ICacheService<CompileResponse>, RedisCacheService<CompileResponse>>();
+            .AddSingleton<ICacheService, RedisCacheService>();
         return services;
     }
 

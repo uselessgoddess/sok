@@ -1,8 +1,8 @@
 ﻿namespace Compiler.Data.Cache;
 
-public interface ICacheService<T>
+public interface ICacheService
 {
-    Task SetCacheAsync(string key, T value);
+    Task SetCacheAsync(string key, byte[] value);
 
-    Task<T?> GetCacheAsync(string key);
+    Task<byte[]?> GetCacheAsync(string key);
 }
