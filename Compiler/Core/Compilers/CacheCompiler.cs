@@ -9,7 +9,7 @@ public class CacheCompiler(ICacheService cache, ICompiler inner) : ICompiler
 {
     public async Task<CompileResponse> Compile(string src, string opt, CancellationToken token = default)
     {
-        var key = $"{src}:{opt}";
+        var key = $"compiled:{src}:{opt}";
 
         var val = await cache.GetCacheAsync(key);
 
