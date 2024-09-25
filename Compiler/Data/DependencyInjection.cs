@@ -1,18 +1,34 @@
 ﻿using System.Text;
+using Compiler.Data.Cache;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using StackExchange.Redis;
+using GrpcServices;
 
 namespace Compiler.Data;
 
 public static class DependencyInjection
 {
+    private static IServiceCollection AddRedisCache(this IServiceCollection services, IConfiguration config)
+    {
+        var redis = config.GetConnectionString("Redis");
+        services
+            .AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect(redis))
+            .AddSingleton<ICacheService<CompileResponse>, RedisCacheService<CompileResponse>>();
+        return services;
+    }
+
     public static WebApplicationBuilder AddData(this WebApplicationBuilder builder)
     {
-        var jwt = builder.Configuration.GetSection("Jwt");
-        builder.Services.AddAuthentication(options =>
+        var config = builder.Configuration;
+        var jwt = config.GetSection("Jwt");
+
+        builder.Services
+            .AddRedisCache(config)
+            .AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
