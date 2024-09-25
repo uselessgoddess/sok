@@ -3,7 +3,7 @@
 using VRisc.Core.Channels;
 using VRisc.Core.Entities;
 using VRisc.Core.Exceptions;
-using VRisc.Core.Interfaces;
+using VRisc.Infrastructure.Interfaces;
 using VRisc.UseCases.Emulation;
 
 public class TasksHandler(

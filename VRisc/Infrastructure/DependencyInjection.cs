@@ -1,4 +1,6 @@
-﻿namespace VRisc.Infrastructure;
+﻿using VRisc.Infrastructure.Interfaces;
+
+namespace VRisc.Infrastructure;
 
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;

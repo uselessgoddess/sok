@@ -3,6 +3,7 @@
 using VRisc.Core.Entities;
 using VRisc.Core.Exceptions;
 using VRisc.Core.Interfaces;
+using VRisc.Infrastructure.Interfaces;
 
 public class StatesHandler(
     IEmulationStatesService states,
