@@ -4,7 +4,18 @@
     restart: always
     ports:
       - "27017:27017"
-
+  redis:
+    image: redis
+    restart: always
+    ports:
+      - "6379:6379"
+  rabbit:
+    image: rabbitmq
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+  
   vrisc.service:
     build: ./VRisc
     restart: always
@@ -12,6 +23,7 @@
       - "6002:8080"
     depends_on:
       - mongo
+      - rabbit
       - compiler.service
 
   compiler.service:
@@ -19,3 +31,6 @@
     restart: always
     ports:
       - "6003:8080"
+    depends_on:
+      - redis
+      - rabbit

@@ -9,7 +9,10 @@ public static class DependencyInjection
 {
     public static WebApplicationBuilder AddCore(this WebApplicationBuilder builder)
     {
-        builder.Services.AddScoped<ICompiler, ProcessCompiler>();
+        builder.Services
+            .AddScoped<ICompiler, ProcessCompiler>()
+            .AddScoped<ICompiler, AnalyticsCompiler>()
+            .AddScoped<ICompiler, CacheCompiler>();
         return builder;
     }
 }
