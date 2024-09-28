@@ -1,3 +1,5 @@
+using GrpcServices;
+
 namespace VRisc.UseCases.Handlers;
 
 using VRisc.Core.Entities;
@@ -55,7 +57,7 @@ public class StatesHandler(
 
     public void LoadDram(string user, byte[] dram)
     {
-        check.SendPotentialAsm(dram);
+        check.SendPotentialAsm(user, dram);
 
         states.UpdateState(user, state =>
         {

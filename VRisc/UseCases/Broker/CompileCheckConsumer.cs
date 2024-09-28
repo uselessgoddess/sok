@@ -1,23 +1,27 @@
-﻿namespace VRisc.UseCases.Broker;
+﻿using VRisc.Core.Interfaces;
+using VRisc.Infrastructure.Interfaces;
+using VRisc.UseCases.Interfaces;
 
-using System.Text;
+namespace VRisc.UseCases.Broker;
+
+using GrpcServices;
 using Microsoft.Extensions.Hosting;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using VRisc.Infrastructure.Broker;
-using VRisc.Infrastructure.Services;
-using VRisc.UseCases.Interfaces;
 
-public class CompileCheckConsumer(RabbitMQConnection mq) : BackgroundService
+public class CompileCheckConsumer(RabbitMQConnection mq, ICheckNotifier notifier) : BackgroundService
 {
     protected override Task ExecuteAsync(CancellationToken token)
     {
         var consumer = new EventingBasicConsumer(mq.Channel);
-        consumer.Received += (model, args) =>
+        consumer.Received += async (model, args) =>
         {
-            var _result = Encoding.UTF8.GetString(args.Body.ToArray());
+            var res = CheckResponse.Parser.ParseFrom(args.Body.ToArray());
+
+            await notifier.Notify(res.User, res.Ok, res.Message);
         };
-        mq.Channel.BasicConsume(queue: "compile-check", autoAck: true, consumer);
+        mq.Channel.BasicConsume(queue: Queries.COMPILE_CHECK, autoAck: true, consumer);
 
         return Task.CompletedTask;
     }

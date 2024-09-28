@@ -14,7 +14,7 @@ public class CompileCheckProducer(RabbitMQConnection mq)
 
         mq.Channel.BasicPublish(
             exchange: string.Empty,
-            routingKey: "compile-check",
+            routingKey: Queries.COMPILE_CHECK,
             basicProperties: props,
             body: res.ToByteArray());
     }

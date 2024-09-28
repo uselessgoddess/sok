@@ -18,10 +18,12 @@ message CompileResponse {
 }
 
 message CheckRequest {
-  bytes source = 1;
+  string user = 1;
+  bytes source = 2;
 }
 
 message CheckResponse {
-  bool ok = 1;
-  string message = 2;
+  string user = 1;
+  bool ok = 2;
+  string message = 3;
 }

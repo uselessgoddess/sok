@@ -16,17 +16,18 @@ public class CompileCheckConsumer(RabbitMQConnection mq, CompileCheckProducer pr
         var consumer = new EventingBasicConsumer(mq.Channel);
         consumer.Received += async (model, args) =>
         {
-            var bytes = CheckRequest.Parser.ParseFrom(args.Body.ToArray()).Source;
-            
-            var (ok, message) = await check.Check(bytes.ToByteArray());
-            
+            var req = CheckRequest.Parser.ParseFrom(args.Body.ToArray());
+
+            var (ok, message) = await check.Check(req.Source.ToByteArray());
+
             prod.SendCheckResult(new CheckResponse
             {
+                User = req.User,
                 Ok = ok,
                 Message = message
             });
         };
-        mq.Channel.BasicConsume(queue: "compile-check", autoAck: true, consumer);
+        mq.Channel.BasicConsume(queue: Queries.COMPILE_CHECK, autoAck: true, consumer);
 
         return Task.CompletedTask;
     }

@@ -19,7 +19,6 @@ public static class DependencyInjection
     private static IServiceCollection AddHangfireJobs(this IServiceCollection services, IConfiguration config)
     {
         services.AddSingleton<AnalyticsJob>();
-        services.AddSingleton<AnalyticsJob>();
 
         RecurringJob.AddOrUpdate<AnalyticsJob>("collect-metrics", analytics => analytics.CollectMetrics(), Cron.Hourly);
         RecurringJob.AddOrUpdate<ICacheService>("clean-cache", cache => cache.ClearCache(), Cron.Daily);
@@ -29,7 +28,6 @@ public static class DependencyInjection
     private static IServiceCollection AddServices(this IServiceCollection services, IConfiguration config)
     {
         services
-            .AddSingleton(new RabbitMQConnection(config.GetConnectionString("RabbitMQ")!))
             .AddSingleton<AnalyticsService>();
         return services;
     }
@@ -44,6 +42,7 @@ public static class DependencyInjection
             .AddSingleton<ICacheService, RedisCacheService>()
             .AddHangfire(config => { config.UseRedisStorage(conn); })
             .AddHangfireServer();
+        JobStorage.Current = new RedisStorage(conn);
         return services;
     }
 
@@ -56,6 +55,7 @@ public static class DependencyInjection
             .AddServices(config)
             .AddRedisCache(config)
             .AddHangfireJobs(config)
+            .AddSingleton(new RabbitMQConnection(config.GetConnectionString("RabbitMQ")!))
             .AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

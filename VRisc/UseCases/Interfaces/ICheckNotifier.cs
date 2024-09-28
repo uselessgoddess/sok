@@ -2,5 +2,5 @@
 
 public interface ICheckNotifier
 {
-    void Notify(bool success, string message = "");
+    Task Notify(string user, bool ok, string message = "");
 }

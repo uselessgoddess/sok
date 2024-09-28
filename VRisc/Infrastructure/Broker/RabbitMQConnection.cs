@@ -26,6 +26,8 @@ public class RabbitMQConnection : IDisposable
         var factory = new ConnectionFactory { HostName = host };
         connection = factory.CreateConnection();
         Channel = connection.CreateModel();
+
+        Channel.QueueDeclare(Queries.COMPILE_CHECK, exclusive: false);
     }
 
     public void Dispose()

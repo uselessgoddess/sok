@@ -9,8 +9,8 @@
     restart: always
     ports:
       - "6379:6379"
-  rabbit:
-    image: rabbitmq
+  rabbitmq:
+    image: rabbitmq:management
     restart: always
     ports:
       - "5672:5672"
@@ -23,7 +23,7 @@
       - "6002:8080"
     depends_on:
       - mongo
-      - rabbit
+      - rabbitmq
       - compiler.service
 
   compiler.service:
@@ -33,4 +33,4 @@
       - "6003:8080"
     depends_on:
       - redis
-      - rabbit
+      - rabbitmq

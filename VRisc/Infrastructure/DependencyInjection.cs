@@ -1,6 +1,7 @@
 namespace VRisc.Infrastructure;
 
 using System.Text;
+using GrpcServices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -8,6 +9,7 @@ using Microsoft.IdentityModel.Tokens;
 using MongoDB.Driver;
 using VRisc.Core.Entities;
 using VRisc.Core.Interfaces;
+using VRisc.Infrastructure.Broker;
 using VRisc.Infrastructure.Data;
 using VRisc.Infrastructure.Interfaces;
 using VRisc.Infrastructure.Repositories;
