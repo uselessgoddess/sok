@@ -1,5 +1,3 @@
-﻿using VRisc.Infrastructure.Broker;
-
 namespace VRisc.Infrastructure;
 
 using System.Text;
@@ -66,7 +64,12 @@ public static class DependencyInjection
 
     private static IServiceCollection AddServices(this IServiceCollection services, IConfiguration config)
     {
+        services.AddGrpcClient<Compiler.CompilerClient>(o =>
+        {
+            o.Address = new Uri(config.GetSection("Grpc")["Address"]);
+        });
         services
+            .AddSingleton<GrpcCompilerService>()
             .AddSingleton(new RabbitMQConnection(config.GetConnectionString("RabbitMQ")!))
             .AddSingleton<IEmulationStatesService, EmulationStatesService>()
             .AddSingleton<IEmulationTaskManager, EmulationTaskManager>()

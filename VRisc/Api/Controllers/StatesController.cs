@@ -1,4 +1,6 @@
-﻿namespace VRisc.Api.Controllers;
+﻿using Microsoft.AspNetCore.Authentication;
+
+namespace VRisc.Api.Controllers;
 
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -47,6 +49,12 @@ public class StatesController(StatesHandler handler, IMapper mapper) : Controlle
     public async Task LoadDram([FromBody] byte[] dram)
     {
         handler.LoadDram(AuthUser, dram);
+    }
+
+    [HttpPut("/load-code")]
+    public async Task LoadCode([FromBody] string code)
+    {
+        await handler.LoadCode(AuthUser, await HttpContext.GetTokenAsync("Bearer", "access_token"), code);
     }
 
     [HttpGet("/sessions")]
