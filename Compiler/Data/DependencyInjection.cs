@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using Compiler.Data.Broker;
 using Compiler.Data.Cache;
 using Compiler.Data.Jobs;
 using Compiler.Data.Services;
@@ -27,7 +28,9 @@ public static class DependencyInjection
 
     private static IServiceCollection AddServices(this IServiceCollection services, IConfiguration config)
     {
-        services.AddSingleton<AnalyticsService>();
+        services
+            .AddSingleton(new RabbitMQConnection(config.GetConnectionString("RabbitMQ")!))
+            .AddSingleton<AnalyticsService>();
         return services;
     }
 

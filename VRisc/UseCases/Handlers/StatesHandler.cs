@@ -1,4 +1,6 @@
-﻿namespace VRisc.UseCases.Handlers;
+﻿using VRisc.UseCases.Broker;
+
+namespace VRisc.UseCases.Handlers;
 
 using VRisc.Core.Entities;
 using VRisc.Core.Exceptions;
@@ -7,7 +9,8 @@ using VRisc.Infrastructure.Interfaces;
 
 public class StatesHandler(
     IEmulationStatesService states,
-    IEmulationStateRepository repo)
+    IEmulationStateRepository repo,
+    CompileCheckProducer check)
 {
     public EmulationState Current(string user)
     {
@@ -51,6 +54,8 @@ public class StatesHandler(
 
     public void LoadDram(string user, byte[] dram)
     {
+        check.SendPotentialAsm(dram);
+
         states.UpdateState(user, state =>
         {
             state.Cpu.Bus.Dram = dram;

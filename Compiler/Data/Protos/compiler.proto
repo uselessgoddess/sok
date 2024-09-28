@@ -16,3 +16,12 @@ message CompileResponse {
   bytes binary = 2;
   string message = 3;
 }
+
+message CheckRequest {
+  bytes source = 1;
+}
+
+message CheckResponse {
+  bool ok = 1;
+  string message = 2;
+}
