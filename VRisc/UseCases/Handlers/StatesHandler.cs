@@ -1,10 +1,10 @@
-using GrpcServices;
-
 namespace VRisc.UseCases.Handlers;
 
+using GrpcServices;
 using VRisc.Core.Entities;
 using VRisc.Core.Exceptions;
 using VRisc.Core.Interfaces;
+using VRisc.Infrastructure.Services;
 using VRisc.Infrastructure.Interfaces;
 using VRisc.Infrastructure.Services;
 using VRisc.UseCases.Broker;
