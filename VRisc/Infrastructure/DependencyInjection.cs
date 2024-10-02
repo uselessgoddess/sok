@@ -1,11 +1,6 @@
 namespace VRisc.Infrastructure;
 
-using Grpc.Net.Client;
-using GrpcServices;
-using VRisc.Infrastructure.Grpc;
-using VRisc.Infrastructure.Interfaces;
 using System.Text;
-using GrpcServices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,13 +8,17 @@ using Microsoft.IdentityModel.Tokens;
 using MongoDB.Driver;
 using VRisc.Core.Entities;
 using VRisc.Core.Interfaces;
+using VRisc.GrpcServices;
+using VRisc.GrpcServices;
 using VRisc.Infrastructure.Broker;
 using VRisc.Infrastructure.Data;
+using VRisc.Infrastructure.Grpc;
+using VRisc.Infrastructure.Grpc;
+using VRisc.Infrastructure.Interfaces;
+using VRisc.Infrastructure.Interfaces;
 using VRisc.Infrastructure.Interfaces;
 using VRisc.Infrastructure.Repositories;
 using VRisc.Infrastructure.Services;
-using VRisc.Infrastructure.Grpc;
-using VRisc.Infrastructure.Interfaces;
 
 public static class DependencyInjection
 {

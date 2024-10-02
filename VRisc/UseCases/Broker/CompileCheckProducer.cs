@@ -1,11 +1,9 @@
-﻿using Google.Protobuf;
-using GrpcServices;
+﻿namespace VRisc.UseCases.Broker;
 
-namespace VRisc.UseCases.Broker;
-
+using Google.Protobuf;
 using RabbitMQ.Client;
+using VRisc.GrpcServices;
 using VRisc.Infrastructure.Broker;
-using VRisc.Infrastructure.Services;
 
 public class CompileCheckProducer(RabbitMQConnection mq)
 {
