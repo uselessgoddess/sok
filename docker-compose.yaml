@@ -1,7 +1,14 @@
 ﻿services:
+  redis:
+    image: redis
+    restart: always
+    ports:
+      - "6379:6379"
+  
   compiler.service:
     build: ./Compiler
     restart: always
     ports:
       - "6003:8080"
- 
+    depends_on:
+      - redis
