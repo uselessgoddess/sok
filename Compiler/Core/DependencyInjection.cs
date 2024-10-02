@@ -1,4 +1,7 @@
-﻿namespace Compiler.Core;
+﻿using Compiler.Core.Broker;
+using Compiler.Core.Compilers.Check;
+
+namespace Compiler.Core;
 
 using Compiler.Core.Interfaces;
 using Compiler.Core.Compilers;
@@ -9,7 +12,13 @@ public static class DependencyInjection
 {
     public static WebApplicationBuilder AddCore(this WebApplicationBuilder builder)
     {
-        builder.Services.AddScoped<ICompiler, ProcessCompiler>();
+        builder.Services
+            .AddHostedService<CompileCheckConsumer>()
+            .AddScoped<CompileCheckProducer>()
+            .AddScoped<ICompileCheck, DummyCheck>()
+            .AddScoped<ICompiler, ProcessCompiler>()
+            .AddScoped<ICompiler, AnalyticsCompiler>()
+            .AddScoped<ICompiler, CacheCompiler>();
         return builder;
     }
 }

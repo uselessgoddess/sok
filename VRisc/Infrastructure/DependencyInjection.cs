@@ -1,19 +1,21 @@
-﻿namespace VRisc.Infrastructure;
+namespace VRisc.Infrastructure;
 
 using Grpc.Net.Client;
 using GrpcServices;
 using VRisc.Infrastructure.Grpc;
 using VRisc.Infrastructure.Interfaces;
 using System.Text;
+using GrpcServices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using MongoDB.Driver;
 using VRisc.Core.Entities;
 using VRisc.Core.Interfaces;
+using VRisc.Infrastructure.Broker;
 using VRisc.Infrastructure.Data;
+using VRisc.Infrastructure.Interfaces;
 using VRisc.Infrastructure.Repositories;
 using VRisc.Infrastructure.Services;
 using VRisc.Infrastructure.Grpc;
@@ -58,7 +60,7 @@ public static class DependencyInjection
 
     private static IServiceCollection AddResources(this IServiceCollection services, IConfiguration config)
     {
-        var conn = config.GetConnectionString("DefaultConnection")!;
+        var conn = config.GetConnectionString("Mongo")!;
         var database = config.GetSection("Mongo")["Database"]!;
         var mongo = new MongoContext(new MongoClient(conn), database);
 
@@ -76,6 +78,7 @@ public static class DependencyInjection
         });
         services
             .AddSingleton<GrpcCompilerService>()
+            .AddSingleton(new RabbitMQConnection(config.GetConnectionString("RabbitMQ")!))
             .AddSingleton<IEmulationStatesService, EmulationStatesService>()
             .AddSingleton<IEmulationTaskManager, EmulationTaskManager>()
             .AddScoped<IEmulationStateRepository, EmulationStateRepository>();

@@ -1,0 +1,10 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "GrpcServices";
+
+message Metrics {
+  uint64 success = 1;
+  uint64 failed = 2;
+  uint64 lenght = 3;
+  double time = 4;
+}

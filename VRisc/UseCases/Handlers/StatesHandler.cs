@@ -1,17 +1,19 @@
-﻿using GrpcServices;
-
 namespace VRisc.UseCases.Handlers;
 
+using GrpcServices;
 using VRisc.Core.Entities;
 using VRisc.Core.Exceptions;
 using VRisc.Core.Interfaces;
 using VRisc.Infrastructure.Services;
 using VRisc.Infrastructure.Interfaces;
+using VRisc.Infrastructure.Services;
+using VRisc.UseCases.Broker;
 
 public class StatesHandler(
     IEmulationStatesService states,
     IEmulationStateRepository repo,
-    GrpcCompilerService compiler)
+    GrpcCompilerService compiler,
+    CompileCheckProducer check)
 {
     public EmulationState Current(string user)
     {
@@ -55,6 +57,8 @@ public class StatesHandler(
 
     public void LoadDram(string user, byte[] dram)
     {
+        check.SendPotentialAsm(user, dram);
+
         states.UpdateState(user, state =>
         {
             state.Cpu.Bus.Dram = dram;

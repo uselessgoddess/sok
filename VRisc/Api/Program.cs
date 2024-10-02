@@ -1,8 +1,8 @@
 using VRisc.Api;
-using VRisc.Api.Hubs;
 using VRisc.Api.Middlewares;
 using VRisc.Infrastructure;
 using VRisc.UseCases;
+using VRisc.UseCases.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
