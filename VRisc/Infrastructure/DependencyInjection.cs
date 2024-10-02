@@ -1,7 +1,9 @@
-﻿using VRisc.Infrastructure.Interfaces;
+﻿namespace VRisc.Infrastructure;
 
-namespace VRisc.Infrastructure;
-
+using Grpc.Net.Client;
+using GrpcServices;
+using VRisc.Infrastructure.Grpc;
+using VRisc.Infrastructure.Interfaces;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -14,6 +16,8 @@ using VRisc.Core.Interfaces;
 using VRisc.Infrastructure.Data;
 using VRisc.Infrastructure.Repositories;
 using VRisc.Infrastructure.Services;
+using VRisc.Infrastructure.Grpc;
+using VRisc.Infrastructure.Interfaces;
 
 public static class DependencyInjection
 {
@@ -22,7 +26,7 @@ public static class DependencyInjection
         services
             .AddAuthentication(config)
             .AddResources(config)
-            .AddServices();
+            .AddServices(config);
         return services;
     }
 
@@ -64,9 +68,14 @@ public static class DependencyInjection
         return services;
     }
 
-    private static IServiceCollection AddServices(this IServiceCollection services)
+    private static IServiceCollection AddServices(this IServiceCollection services, IConfiguration config)
     {
+        services.AddGrpcClient<Compiler.CompilerClient>(o =>
+        {
+            o.Address = new Uri(config.GetSection("Grpc")["Address"]);
+        });
         services
+            .AddSingleton<GrpcCompilerService>()
             .AddSingleton<IEmulationStatesService, EmulationStatesService>()
             .AddSingleton<IEmulationTaskManager, EmulationTaskManager>()
             .AddScoped<IEmulationStateRepository, EmulationStateRepository>();
