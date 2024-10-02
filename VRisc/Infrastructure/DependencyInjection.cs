@@ -1,9 +1,9 @@
-﻿using Grpc.Net.Client;
+﻿namespace VRisc.Infrastructure;
+
+using Grpc.Net.Client;
 using GrpcServices;
 using VRisc.Infrastructure.Grpc;
-
-namespace VRisc.Infrastructure;
-
+using VRisc.Infrastructure.Interfaces;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -16,6 +16,8 @@ using VRisc.Core.Interfaces;
 using VRisc.Infrastructure.Data;
 using VRisc.Infrastructure.Repositories;
 using VRisc.Infrastructure.Services;
+using VRisc.Infrastructure.Grpc;
+using VRisc.Infrastructure.Interfaces;
 
 public static class DependencyInjection
 {

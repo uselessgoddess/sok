@@ -1,4 +1,6 @@
-﻿namespace VRisc.Infrastructure.Services;
+﻿using VRisc.Infrastructure.Interfaces;
+
+namespace VRisc.Infrastructure.Services;
 
 using System.Collections.Concurrent;
 using VRisc.Core.Entities;
