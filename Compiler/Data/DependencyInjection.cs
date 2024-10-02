@@ -1,23 +1,47 @@
 ﻿using System.Text;
 using Compiler.Data.Cache;
+using Compiler.Data.Jobs;
+using Compiler.Data.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using StackExchange.Redis;
-using GrpcServices;
+using Hangfire;
+using Hangfire.Redis.StackExchange;
 
 namespace Compiler.Data;
 
 public static class DependencyInjection
 {
+    private static IServiceCollection AddHangfireJobs(this IServiceCollection services, IConfiguration config)
+    {
+        services.AddSingleton<AnalyticsJob>();
+
+        RecurringJob.AddOrUpdate<AnalyticsJob>("collect-metrics", analytics => analytics.CollectMetrics(), Cron.Hourly);
+        RecurringJob.AddOrUpdate<ICacheService>("clean-cache", cache => cache.ClearCache(), Cron.Daily);
+        return services;
+    }
+
+    private static IServiceCollection AddServices(this IServiceCollection services, IConfiguration config)
+    {
+        services
+            .AddSingleton<AnalyticsService>();
+        return services;
+    }
+
     private static IServiceCollection AddRedisCache(this IServiceCollection services, IConfiguration config)
     {
         var redis = config.GetConnectionString("Redis");
+        var conn = ConnectionMultiplexer.Connect(redis);
         services
-            .AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect(redis))
-            .AddSingleton<ICacheService, RedisCacheService>();
+            .AddSingleton<IConnectionMultiplexer>(conn)
+            .AddSingleton(conn.GetServer(redis))
+            .AddSingleton<ICacheService, RedisCacheService>()
+            .AddHangfire(config => { config.UseRedisStorage(conn); })
+            .AddHangfireServer();
+        JobStorage.Current = new RedisStorage(conn);
         return services;
     }
 
@@ -27,7 +51,9 @@ public static class DependencyInjection
         var jwt = config.GetSection("Jwt");
 
         builder.Services
+            .AddServices(config)
             .AddRedisCache(config)
+            .AddHangfireJobs(config)
             .AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
