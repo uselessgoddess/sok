@@ -11,8 +11,8 @@ public static class DependencyInjection
     {
         builder.Services
             .AddScoped<ICompiler, ProcessCompiler>()
-            .AddScoped<ICompiler, AnalyticsCompiler>()
-            .AddScoped<ICompiler, CacheCompiler>();
+            .Decorate<ICompiler, AnalyticsCompiler>()
+            .Decorate<ICompiler, CacheCompiler>();
         return builder;
     }
 }
