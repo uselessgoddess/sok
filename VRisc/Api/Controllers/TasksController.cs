@@ -1,38 +1,46 @@
-﻿namespace VRisc.Api.Controllers;
+﻿using VRisc.UseCases.Commands;
 
+namespace VRisc.Api.Controllers;
+
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using VRisc.Core.Exceptions;
-using VRisc.UseCases.Handlers;
 
 [ApiController]
 [Authorize]
 [Route("api/tasks")]
-public class TasksController(TasksHandler handler) : ControllerBase
+public class TasksController(IMediator mediator) : ControllerBase
 {
     private string AuthUser => HttpContext.User.Identity!.Name!;
 
     [HttpPost("/start")]
     public async Task Start()
     {
-        handler.Start(AuthUser);
+        await mediator.Send(new StartTask
+        {
+            User = AuthUser,
+        });
     }
 
     [HttpPost("/stop")]
     public async Task Stop()
     {
-        handler.Stop(AuthUser);
+        await mediator.Send(new StopTask
+        {
+            User = AuthUser,
+        });
     }
 
     [HttpGet("/state")]
     public async Task<IActionResult> State()
     {
-        return Ok(await handler.StateAsync(AuthUser));
+        return Ok(await mediator.Send(new TaskState { User = AuthUser }));
     }
 
     [HttpGet("/completed-status")]
     public async Task<IActionResult> Completed()
     {
-        return Ok(handler.Completed(AuthUser));
+        return Ok(await mediator.Send(new TaskCompleted { User = AuthUser }));
     }
 }
