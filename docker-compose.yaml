@@ -16,6 +16,12 @@
       - "5672:5672"
       - "15672:15672"
   
+  identity.service:
+    build: ./VRisc
+    restart: always
+    ports:
+      - "6001:8080"
+  
   vrisc.service:
     build: ./VRisc
     restart: always
@@ -34,3 +40,12 @@
     depends_on:
       - redis
       - rabbitmq
+
+  api.gateway:
+    build: ./ApiGateway
+    restart: always
+    ports:
+      - "6000:6000"
+    depends_on:
+      - vrisc.service
+      - compiler.service
