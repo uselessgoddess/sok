@@ -13,7 +13,7 @@ COPY /zxc /app
 ENV PATH="/root/.cargo/bin:${PATH}"
 
 # TODO: later build llvm with X86 target 
-RUN cargo build --release # && cargo test
+RUN cargo build --release && cargo test --lib --release
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
