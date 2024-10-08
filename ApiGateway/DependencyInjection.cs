@@ -9,9 +9,11 @@ public static class DependencyInjection
 {
     public static WebApplicationBuilder AddApiGateway(this WebApplicationBuilder builder)
     {
-        builder.Configuration.AddJsonFile("ocelot.json", optional: false, reloadOnChange: true);
+        var config = builder.Configuration;
+        
+        config.AddJsonFile("ocelot.json", optional: false, reloadOnChange: true);
 
-        builder.Services.AddOcelot();
+        builder.Services.AddBearer(config).AddOcelot();
 
         return builder;
     }

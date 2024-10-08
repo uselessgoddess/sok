@@ -17,7 +17,7 @@
       - "15672:15672"
   
   identity.service:
-    build: ./VRisc
+    build: ./Identity
     restart: always
     ports:
       - "6001:8080"
@@ -45,7 +45,8 @@
     build: ./ApiGateway
     restart: always
     ports:
-      - "6000:6000"
+      - "6000:8080"
     depends_on:
+      - identity.service
       - vrisc.service
       - compiler.service
