@@ -37,7 +37,7 @@ RUN dotnet restore Api/Compiler.Api.csproj
 FROM build AS publish
 
 COPY . .
-RUN dotnet publish Api/Compiler.Api.csproj -c release -o publish
+RUN dotnet test Api/Compiler.Api.csproj && dotnet publish Api/Compiler.Api.csproj -c release -o publish
 
 COPY Api/appsettings.json .
 COPY --from=rust /app/target/release/driver ./
