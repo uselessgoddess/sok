@@ -17,7 +17,7 @@ RUN dotnet restore Api/VRisc.Api.csproj
 FROM build AS publish
 
 COPY . .
-RUN dotnet publish Api/VRisc.Api.csproj -c release -o publish
+RUN dotnet test Api/VRisc.Api.csproj && dotnet publish Api/VRisc.Api.csproj -c release -o publish
 
 COPY Api/appsettings.json .
 COPY --from=rust /app/target/release/* publish/

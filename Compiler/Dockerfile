@@ -13,7 +13,7 @@ COPY /zxc /app
 ENV PATH="/root/.cargo/bin:${PATH}"
 
 # TODO: later build llvm with X86 target 
-RUN cargo build --release # && cargo test
+RUN cargo build --release && cargo test --lib --release
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
@@ -37,7 +37,7 @@ RUN dotnet restore Api/Compiler.Api.csproj
 FROM build AS publish
 
 COPY . .
-RUN dotnet publish Api/Compiler.Api.csproj -c release -o publish
+RUN dotnet test Api/Compiler.Api.csproj && dotnet publish Api/Compiler.Api.csproj -c release -o publish
 
 COPY Api/appsettings.json .
 COPY --from=rust /app/target/release/driver ./

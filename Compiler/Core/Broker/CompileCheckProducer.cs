@@ -1,5 +1,5 @@
-﻿using Google.Protobuf;
-using GrpcServices;
+﻿using Compiler.GrpcServices;
+using Google.Protobuf;
 
 namespace Compiler.Core.Broker;
 
