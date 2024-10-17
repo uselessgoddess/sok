@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using Compiler.Data.Broker;
 using Compiler.Data.Cache;
 using Compiler.Data.Jobs;
 using Compiler.Data.Services;
@@ -54,6 +55,7 @@ public static class DependencyInjection
             .AddServices(config)
             .AddRedisCache(config)
             .AddHangfireJobs(config)
+            .AddSingleton(new RabbitMQConnection(config.GetConnectionString("RabbitMQ")!))
             .AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

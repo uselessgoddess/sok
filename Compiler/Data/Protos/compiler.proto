@@ -1,6 +1,6 @@
 ﻿syntax = "proto3";
 
-option csharp_namespace = "GrpcServices";
+option csharp_namespace = "Compiler.GrpcServices";
 
 service Compiler {
   rpc CompileCode (CompileRequest) returns (CompileResponse);
@@ -14,5 +14,16 @@ message CompileRequest {
 message CompileResponse {
   bool success = 1;
   bytes binary = 2;
+  string message = 3;
+}
+
+message CheckRequest {
+  string user = 1;
+  bytes source = 2;
+}
+
+message CheckResponse {
+  string user = 1;
+  bool ok = 2;
   string message = 3;
 }
