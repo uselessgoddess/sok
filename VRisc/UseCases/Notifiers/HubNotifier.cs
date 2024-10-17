@@ -1,8 +1,10 @@
-﻿namespace VRisc.UseCases.Notifiers;
+﻿using VRisc.Core.Interfaces;
+using VRisc.UseCases.Interfaces;
+
+namespace VRisc.UseCases.Notifiers;
 
 using Microsoft.AspNetCore.SignalR;
 using VRisc.UseCases.Hubs;
-using VRisc.UseCases.Interfaces;
 
 public class HubNotifier(IHubContext<EmulationHub> hub) : ICheckNotifier
 {

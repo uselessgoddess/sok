@@ -1,5 +1,3 @@
-namespace VRisc.Infrastructure;
-
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
@@ -13,12 +11,11 @@ using VRisc.GrpcServices;
 using VRisc.Infrastructure.Broker;
 using VRisc.Infrastructure.Data;
 using VRisc.Infrastructure.Grpc;
-using VRisc.Infrastructure.Grpc;
-using VRisc.Infrastructure.Interfaces;
-using VRisc.Infrastructure.Interfaces;
-using VRisc.Infrastructure.Interfaces;
 using VRisc.Infrastructure.Repositories;
 using VRisc.Infrastructure.Services;
+using VRisc.UseCases.Interfaces;
+
+namespace VRisc.Infrastructure;
 
 public static class DependencyInjection
 {
@@ -80,7 +77,9 @@ public static class DependencyInjection
             .AddSingleton(new RabbitMQConnection(config.GetConnectionString("RabbitMQ")!))
             .AddSingleton<IEmulationStatesService, EmulationStatesService>()
             .AddSingleton<IEmulationTaskManager, EmulationTaskManager>()
-            .AddScoped<IEmulationStateRepository, EmulationStateRepository>();
+            .AddScoped<IEmulationStateRepository, EmulationStateRepository>()
+            .AddScoped<ICompileCheckProducer, CompileCheckProducer>()
+            .AddHostedService<CompileCheckConsumer>();
         return services;
     }
 }

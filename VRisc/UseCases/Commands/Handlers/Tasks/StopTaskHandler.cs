@@ -4,7 +4,7 @@ using MediatR;
 using VRisc.Core.Channels;
 using VRisc.Core.Entities;
 using VRisc.Core.Exceptions;
-using VRisc.Infrastructure.Interfaces;
+using VRisc.UseCases.Interfaces;
 using VRisc.UseCases.Emulation;
 
 public class StopTaskHandler(IEmulationTaskManager tasks) : IRequestHandler<StopTask>

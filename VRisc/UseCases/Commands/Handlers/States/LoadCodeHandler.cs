@@ -1,31 +1,21 @@
-﻿namespace VRisc.UseCases.Commands.Handlers;
+﻿using MediatR;
+using VRisc.UseCases.Interfaces;
+using VRisc.UseCases.Interfaces;
 
-using MediatR;
-using VRisc.Core.Exceptions;
-using VRisc.Infrastructure.Interfaces;
-using VRisc.Infrastructure.Services;
+namespace VRisc.UseCases.Commands.Handlers;
 
-public class LoadCodeHandler(IEmulationStatesService states, GrpcCompilerService compiler)
+public class LoadCodeHandler(IEmulationStatesService states, ICodeCompiler compiler)
     : IRequestHandler<LoadCode>
 {
     public async Task Handle(LoadCode req, CancellationToken token)
     {
         var (user, jwt, code) = (req.User, req.Jwt, req.Code);
 
-        var compiled = await compiler.CompileAsync(jwt, new GrpcServices.CompileRequest
-        {
-            OptLevel = "0",
-            Source = code,
-        });
-
-        if (!compiled.Success)
-        {
-            throw new BadRequestException(compiled.Message);
-        }
+        var bytes = await compiler.CompileAsync(jwt, code);
 
         states.UpdateState(user, state =>
         {
-            state.Cpu.Bus.Dram = compiled.Binary.ToByteArray();
+            state.Cpu.Bus.Dram = bytes;
             return state;
         });
     }

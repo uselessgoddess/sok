@@ -1,7 +1,7 @@
 ﻿namespace VRisc.UseCases.Commands.Handlers;
 
 using MediatR;
-using VRisc.Infrastructure.Interfaces;
+using VRisc.UseCases.Interfaces;
 
 public class UpdateStateHandler(IEmulationStatesService states)
     : IRequestHandler<UpdateState>

@@ -3,7 +3,7 @@
 using MediatR;
 using VRisc.Core.Entities;
 using VRisc.Core.Exceptions;
-using VRisc.Infrastructure.Interfaces;
+using VRisc.UseCases.Interfaces;
 
 public class NewStateHandler(IEmulationStatesService states) : IRequestHandler<NewState, EmulationState>
 {

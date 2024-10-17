@@ -1,4 +1,4 @@
-﻿using VRisc.Infrastructure.Interfaces;
+﻿using VRisc.UseCases.Interfaces;
 
 namespace VRisc.Infrastructure.Services;
 

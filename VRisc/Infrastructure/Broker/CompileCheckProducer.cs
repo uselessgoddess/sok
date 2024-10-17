@@ -1,11 +1,11 @@
-﻿namespace VRisc.UseCases.Broker;
-
-using Google.Protobuf;
+﻿using Google.Protobuf;
 using RabbitMQ.Client;
 using VRisc.GrpcServices;
-using VRisc.Infrastructure.Broker;
+using VRisc.UseCases.Interfaces;
 
-public class CompileCheckProducer(RabbitMQConnection mq)
+namespace VRisc.Infrastructure.Broker;
+
+public class CompileCheckProducer(RabbitMQConnection mq) : ICompileCheckProducer
 {
     public void SendPotentialAsm(string user, byte[] bytes)
     {

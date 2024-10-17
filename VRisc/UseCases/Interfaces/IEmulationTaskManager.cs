@@ -1,4 +1,4 @@
-﻿namespace VRisc.Infrastructure.Interfaces;
+﻿namespace VRisc.UseCases.Interfaces;
 
 using VRisc.Core.Entities;
 using VRisc.Core.Interfaces;

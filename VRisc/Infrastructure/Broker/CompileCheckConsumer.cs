@@ -1,14 +1,10 @@
-﻿using VRisc.Core.Interfaces;
-using VRisc.Infrastructure.Interfaces;
-using VRisc.UseCases.Interfaces;
-
-namespace VRisc.UseCases.Broker;
-
-using GrpcServices;
-using Microsoft.Extensions.Hosting;
+﻿using Microsoft.Extensions.Hosting;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
-using VRisc.Infrastructure.Broker;
+using VRisc.GrpcServices;
+using VRisc.UseCases.Interfaces;
+
+namespace VRisc.Infrastructure.Broker;
 
 public class CompileCheckConsumer(RabbitMQConnection mq, ICheckNotifier notifier) : BackgroundService
 {

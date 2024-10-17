@@ -1,10 +1,9 @@
 ﻿namespace VRisc.UseCases.Commands.Handlers;
 
 using MediatR;
-using VRisc.Infrastructure.Interfaces;
-using VRisc.UseCases.Broker;
+using VRisc.UseCases.Interfaces;
 
-public class LoadDramHandler(IEmulationStatesService states, CompileCheckProducer check)
+public class LoadDramHandler(IEmulationStatesService states, ICompileCheckProducer check)
     : IRequestHandler<LoadDram>
 {
     public async Task Handle(LoadDram req, CancellationToken token)

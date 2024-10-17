@@ -1,6 +1,7 @@
-﻿namespace VRisc.UseCases.Notifiers;
-
+﻿using VRisc.Core.Interfaces;
 using VRisc.UseCases.Interfaces;
+
+namespace VRisc.UseCases.Notifiers;
 
 public class DummyNotifier : ICheckNotifier
 {

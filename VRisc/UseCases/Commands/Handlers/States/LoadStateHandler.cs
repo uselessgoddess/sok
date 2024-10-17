@@ -2,7 +2,7 @@
 
 using MediatR;
 using VRisc.Core.Interfaces;
-using VRisc.Infrastructure.Interfaces;
+using VRisc.UseCases.Interfaces;
 
 public class LoadStateHandler(IEmulationStatesService states, IEmulationStateRepository repo)
     : IRequestHandler<LoadState>

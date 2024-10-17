@@ -1,9 +1,8 @@
-﻿namespace VRisc.UseCases;
-
-using Microsoft.Extensions.DependencyInjection;
-using VRisc.UseCases.Broker;
+﻿using Microsoft.Extensions.DependencyInjection;
 using VRisc.UseCases.Interfaces;
 using VRisc.UseCases.Notifiers;
+
+namespace VRisc.UseCases;
 
 public static class DependencyInjection
 {
@@ -11,8 +10,6 @@ public static class DependencyInjection
     {
         services
             .AddMediatR(config => config.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly))
-            .AddHostedService<CompileCheckConsumer>()
-            .AddScoped<CompileCheckProducer>()
             .AddScoped<ICheckNotifier, HubNotifier>();
         return services;
     }
