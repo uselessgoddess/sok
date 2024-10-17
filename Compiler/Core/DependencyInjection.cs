@@ -17,8 +17,8 @@ public static class DependencyInjection
             .AddScoped<CompileCheckProducer>()
             .AddScoped<ICompileCheck, DummyCheck>()
             .AddScoped<ICompiler, ProcessCompiler>()
-            .AddScoped<ICompiler, AnalyticsCompiler>()
-            .AddScoped<ICompiler, CacheCompiler>();
+            .Decorate<ICompiler, AnalyticsCompiler>()
+            .Decorate<ICompiler, CacheCompiler>();
         return builder;
     }
 }

@@ -10,4 +10,8 @@
       <ProjectReference Include="..\Data\Compiler.Data.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Scrutor" Version="5.0.1" />
+    </ItemGroup>
+
 </Project>
