@@ -2,7 +2,7 @@
 
 using MediatR;
 
-public class LoadCode : Base, IRequest
+public class CompileCode : IRequest<byte[]>
 {
     public required string Jwt { get; set; }
 

@@ -1,16 +1,15 @@
-﻿namespace VRisc.UseCases.Commands.Handlers;
-
-using MediatR;
+﻿using MediatR;
+using VRisc.Core.Entities;
 using VRisc.Core.Interfaces;
 using VRisc.UseCases.Interfaces;
 
-public class LoadStateHandler(IEmulationStatesService states, IEmulationStateRepository repo)
-    : IRequestHandler<LoadState>
-{
-    public async Task Handle(LoadState req, CancellationToken token)
-    {
-        var state = await repo.LoadState(req.Id);
+namespace VRisc.UseCases.Commands.Handlers;
 
-        states.SetState(req.User, state);
+public class LoadStateHandler(IEmulationStateRepository repo)
+    : IRequestHandler<LoadState, EmulationState?>
+{
+    public async Task<EmulationState?> Handle(LoadState req, CancellationToken token)
+    {
+        return await repo.LoadState(req.Id);
     }
 }

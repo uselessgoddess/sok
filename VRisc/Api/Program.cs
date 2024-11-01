@@ -13,7 +13,7 @@ builder.Services
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment() || true)
 {
     app.UseDeveloperExceptionPage();
     app.UseSwagger();

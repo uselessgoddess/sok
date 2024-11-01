@@ -1,8 +1,9 @@
-﻿namespace VRisc.UseCases.Commands;
-
+﻿using VRisc.Core.Entities;
 using MediatR;
 
-public class LoadState : Base, IRequest
+namespace VRisc.UseCases.Commands;
+
+public class LoadState : Base, IRequest<EmulationState?>
 {
     public required string Id { get; set; }
 }

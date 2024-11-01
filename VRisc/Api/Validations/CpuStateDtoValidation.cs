@@ -3,11 +3,11 @@
 using FluentValidation;
 using VRisc.Api.DTOs;
 
-public class EmulationStateDtoValidation : AbstractValidator<EmulationStateDto>
+public class CpuStateDtoValidation : AbstractValidator<CpuStateDto>
 {
-    public EmulationStateDtoValidation()
+    public CpuStateDtoValidation()
     {
-        RuleFor(x => x.Cpu.Bus.Dram).Must(IsBase64String).WithMessage("must be base64 string");
+        RuleFor(x => x.Bus.Dram).Must(IsBase64String).WithMessage("must be base64 string");
     }
 
     private static bool IsBase64String(string base64)

@@ -36,9 +36,9 @@ public class ExceptionsMiddleware(RequestDelegate next)
         {
             BadRequestException => 400,
             UnauthorizedException => 401,
-            AlreadyExistsException => 403,
-            NotFoundException => 404,
+            ForbiddenException => 403,
             TimeoutException => 408,
+            AlreadyExistsException => 409,
             _ => 0,
         };
     }

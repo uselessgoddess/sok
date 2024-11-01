@@ -11,8 +11,6 @@ public class StateSessionsHandler(IEmulationStateRepository repo)
     {
         var (user, page, size) = (req.User, req.Page, req.Size);
 
-        var list = await repo.LoadStates(user);
-
-        return list.Skip((int)(page * size)).Take((int)size);
+        return await repo.LoadStates(user, (int)page, (int)size);
     }
 }

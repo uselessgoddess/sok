@@ -1,23 +1,16 @@
 ﻿namespace VRisc.Core.Entities;
 
-public class EmulationState
+public class EmulationState(string user, string name)
 {
-    public string? Id { get; set; }
+    public string? Id { get; set; } = Guid.NewGuid().ToString();
 
-    public string User { get; set; }
+    public string Name { get; set; } = name;
 
-    public DateTime Creation { get; set; }
+    public string User { get; set; } = user;
 
-    public DateTime Modified { get; set; }
+    public DateTime? Creation { get; set; } = DateTime.Now;
 
-    public CpuState Cpu { get; set; }
+    public DateTime? Modified { get; set; } = DateTime.Now;
 
-    public EmulationState(string user)
-    {
-        Id = Guid.NewGuid().ToString();
-        User = user;
-        Creation = DateTime.Now;
-        Modified = DateTime.Now;
-        Cpu = new CpuState();
-    }
+    public CpuState Cpu { get; set; } = new();
 }

@@ -10,7 +10,7 @@ public static class DataValidation
     public static IServiceCollection AddDataValidation(this IServiceCollection services)
     {
         services.AddFluentValidationAutoValidation()
-            .AddValidatorsFromAssemblyContaining<EmulationStateDtoValidation>();
+            .AddValidatorsFromAssemblyContaining<CpuStateDtoValidation>();
 
         return services;
     }

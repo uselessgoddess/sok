@@ -8,17 +8,26 @@ public class EmulationStateRepository(IMongoCollection<EmulationState> states) :
 {
     public async Task<EmulationState> LoadState(string emulation)
     {
-        return await states.Find(state => state.Id == emulation).FirstAsync();
+        return await states.Find(state => state.Id == emulation).FirstOrDefaultAsync();
     }
 
-    public Task<IEnumerable<EmulationState>> LoadStates(string user)
+    public async Task<IEnumerable<EmulationState>> LoadStates(string user, int page, int size)
     {
-        return Task.FromResult(states.Find(state => state.User == user).ToEnumerable());
+        return await states.Find(state => state.User == user).Skip(page * size).Limit(size).ToListAsync();
     }
 
     public async Task StoreState(EmulationState state)
     {
-        await states.InsertOneAsync(state);
+        var cursor = await states.FindAsync(old => old.Id == state.Id);
+
+        var old = await cursor.FirstOrDefaultAsync();
+
+        state.Creation = old != null ? old.Creation : DateTime.Now;
+        state.Modified = DateTime.Now;
+
+        var filter = Builders<EmulationState>.Filter.Eq(x => x.Id, state.Id);
+
+        await states.ReplaceOneAsync(filter, state, new ReplaceOptions { IsUpsert = true });
     }
 
     public async Task ForgetState(string emulation)

@@ -1,5 +1,9 @@
-﻿namespace VRisc.UseCases.Commands;
-
+﻿using VRisc.Core.Entities;
 using MediatR;
 
-public class StartTask : Base, IRequest;
+namespace VRisc.UseCases.Commands;
+
+public class StartTask : Base, IRequest
+{
+    public required CpuState State { get; set; }
+}

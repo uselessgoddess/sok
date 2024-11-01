@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using VRisc.Core.Entities;
 using VRisc.UseCases.Commands;
 using VRisc.UseCases.Queries;
 
@@ -17,73 +18,67 @@ public class StatesController(IMediator mediator, IMapper mapper) : ControllerBa
 {
     private string AuthUser => HttpContext.User.Identity!.Name!;
 
-    [HttpGet("/current")]
-    public async Task<IActionResult> Current()
-    {
-        return Ok(await mediator.Send(new CurrentState { User = AuthUser }));
-    }
-
-    [HttpPost("/new")]
+    [HttpPost("new")]
     public async Task<IActionResult> New()
     {
         return Ok(await mediator.Send(new NewState { User = AuthUser }));
     }
 
-    [HttpPost("/save")]
-    public async Task<IActionResult> Save()
+    [HttpGet("load")]
+    public async Task<EmulationStateDto?> Load(string id)
     {
-        return Ok(await mediator.Send(new SaveState { User = AuthUser }));
-    }
-
-    [HttpPut("/update-current")]
-    public async Task UpdateCurrent([FromBody] EmulationStateDto dto)
-    {
-        await mediator.Send(new UpdateState
+        var state = await mediator.Send(new LoadState
         {
             User = AuthUser,
-            Update = state => mapper.Map(dto, state),
+            Id = id,
+        });
+        return mapper.Map<EmulationStateDto>(state);
+    }
+
+    [HttpPut("store")]
+    public async Task Store([FromBody] EmulationInputDto dto)
+    {
+        await mediator.Send(new StoreState
+        {
+            State = new EmulationState(AuthUser, dto.Name)
+            {
+                Id = dto.Id,
+                Creation = null,
+                Modified = null,
+                Cpu = mapper.Map<CpuState>(dto.Cpu),
+            },
         });
     }
 
-    [HttpPut("/load")]
-    public async Task Load(string id)
+    [HttpDelete("remove")]
+    public async Task Remove([FromBody] string id)
     {
-        await mediator.Send(new LoadState
+        await mediator.Send(new RemoveState
         {
             User = AuthUser,
             Id = id,
         });
     }
 
-    [HttpPut("/load-dram")]
-    public async Task LoadDram([FromBody] byte[] dram)
+    [HttpPost("compile-code")]
+    public async Task<IActionResult> CompileCode([FromBody] string code)
     {
-        await mediator.Send(new LoadDram
+        return Ok(await mediator.Send(new CompileCode
         {
-            User = AuthUser,
-            Dram = dram,
-        });
-    }
-
-    [HttpPut("/load-code")]
-    public async Task LoadCode([FromBody] string code)
-    {
-        await mediator.Send(new LoadCode
-        {
-            User = AuthUser,
             Code = code,
             Jwt = (await HttpContext.GetTokenAsync("Bearer", "access_token"))!,
-        });
+        }));
     }
 
-    [HttpGet("/sessions")]
+    [HttpGet("sessions")]
     public async Task<IActionResult> Sessions(uint page, uint size)
     {
-        return Ok(mediator.Send(new StateSessions
+        var list = await mediator.Send(new StateSessions
         {
             User = AuthUser,
             Page = page,
             Size = size,
-        }));
+        });
+        return Ok(list.Select(mapper.Map<EmulationInfoDto>).ToList());
     }
 }

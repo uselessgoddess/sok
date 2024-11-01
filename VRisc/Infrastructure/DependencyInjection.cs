@@ -75,7 +75,6 @@ public static class DependencyInjection
         services
             .AddSingleton<GrpcCompilerService>()
             .AddSingleton(new RabbitMQConnection(config.GetConnectionString("RabbitMQ")!))
-            .AddSingleton<IEmulationStatesService, EmulationStatesService>()
             .AddSingleton<IEmulationTaskManager, EmulationTaskManager>()
             .AddScoped<IEmulationStateRepository, EmulationStateRepository>()
             .AddScoped<ICompileCheckProducer, CompileCheckProducer>()
