@@ -1,7 +1,7 @@
 ﻿using Compiler.Core.Interfaces;
 using Compiler.Data.Cache;
+using Compiler.GrpcServices;
 using Google.Protobuf;
-using GrpcServices;
 
 namespace Compiler.Core.Compilers;
 

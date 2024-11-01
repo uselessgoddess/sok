@@ -1,11 +1,11 @@
-﻿using Compiler.Core.Interfaces;
+using Grpc.Core;
+using Compiler.GrpcServices;
+using Compiler.Core.Interfaces;
 
 namespace Compiler.Core.Services;
 
-using Grpc.Core;
-using GrpcServices;
 
-public class CompilerService(ICompiler compiler) : Compiler.CompilerBase
+public class CompilerService(ICompiler compiler) : Compiler.GrpcServices.Compiler.CompilerBase
 {
     public override async Task<CompileResponse> CompileCode(CompileRequest request, ServerCallContext _)
     {

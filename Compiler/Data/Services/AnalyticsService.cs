@@ -1,4 +1,4 @@
-﻿using GrpcServices;
+﻿using Compiler.GrpcServices;
 
 namespace Compiler.Data.Services;
 
