@@ -1,0 +1,29 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "VRisc.GrpcServices";
+
+service Compiler {
+  rpc CompileCode (CompileRequest) returns (CompileResponse);
+}
+
+message CompileRequest {
+  string source = 1;
+  string optLevel = 2;
+}
+
+message CompileResponse {
+  bool success = 1;
+  bytes binary = 2;
+  string message = 3;
+}
+
+message CheckRequest {
+  string user = 1;
+  bytes source = 2;
+}
+
+message CheckResponse {
+  string user = 1;
+  bool ok = 2;
+  string message = 3;
+}
